@@ -4,7 +4,8 @@ const config = require('./config.json'); // Import configuration
 const fs = require('fs'); // For ignore list checking
 var Events = require('./event_handler.js'); // Load event handler
 var ignoreLists = require('./ignore_handler.js'); // Load ignore handler
-var Commands = require('./command_handler.js'); // Load command handler
+var Commands = require('./command_loader.js'); // Load command handler
+		Commands.initialize(require("path").join(__dirname, config.commandPath));
 var serverConfig = require('./serverconfig_handler.js'); // Load serverConfig handler
 var playableGames = require('./res/games.json'); //loads all the games that the bot can play
 var DMResponses = require('./res/DMResponses.json');
@@ -189,12 +190,12 @@ bot.on('message', msg => { // Listen to all messages sent
 			// Define the file to reload, based on the commands object
 			delete require.cache[require.resolve(`./commands/${cmdFile}`)];
 			delete require.cache[require.resolve('./commands/help.js')];
-			delete require.cache[require.resolve('./command_handler.js')];
+			delete require.cache[require.resolve('./command_loader.js')];
 			/*
 			Delete the command's cache, the 'help' cache and the command handler's cache...
 			('help' cache deleted to update the command's info if command added/removed/changed)
 			*/
-			Commands = require('./command_handler.js');
+			Commands = require('./command_loader.js');
 			// ...then re-require the command handler which then reloads the command.
 		} catch (error) {
 			// If there is an error while reloading...
