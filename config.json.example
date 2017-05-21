@@ -1,0 +1,10 @@
+"token": "Bot token ID goes here",
+    "ownerID": "The creator of the bot's ID goes here",
+    "commandPath": "commands/",
+    "serverConfPath": "serverconf/",
+    "shutdownLog": "shutdown.log",
+    "commandCooldown": 3,
+    "commandPrefix": "!",
+    "useDiscordBots": false,
+    "discordBotsAPI": "API_TOKEN",
+    "needsSpace": 0
