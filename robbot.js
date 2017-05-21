@@ -121,7 +121,6 @@ bot.on('message', msg => { // Listen to all messages sent
 	if (msg.content == config.commandPrefix) {
 		return;
 	} // Ignore empty commands (messages containing just the prefix)
-	console.log('test');
 	commandHandler.runCommand(bot,msg,timeout,Commands.commands);
 	
 });
