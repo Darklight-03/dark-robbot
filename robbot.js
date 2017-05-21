@@ -7,6 +7,7 @@ var ignoreLists = require('./ignore_handler.js'); // Load ignore handler
 var commandHandler = require('./commandHandler.js'); // Load command handler
 var Commands = require('./command_loader.js'); // Load command loader
 		Commands.initialize(require("path").join(__dirname, config.commandPath));
+//		console.log(Commands.commands);
 var serverConfig = require('./serverconfig_handler.js'); // Load serverConfig handler
 var playableGames = require('./res/games.json'); //loads all the games that the bot can play
 var DMResponses = require('./res/DMResponses.json');
