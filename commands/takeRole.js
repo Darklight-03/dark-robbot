@@ -3,13 +3,12 @@ const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
 const prism = require('prism-media'); // Prism for smoother file playing of very short files
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm) { // Export command function
+exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
 	var command = "takerole"; // For logging purposes
 	if (timeout.check(msg.author.id, msg)) {
 		return;
 	}
 	// Check for cooldown, if on cooldown notify user of it and abort command execution.
-	var args = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	var roles = msg.guild.roles;
 	var validroles = [];
 

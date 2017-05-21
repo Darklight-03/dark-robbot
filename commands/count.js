@@ -1,6 +1,6 @@
 const config = require('../config.json'); // Import configuration
 
-exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
+exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command's function
 	if (!botPerm.hasPermission('SEND_MESSAGES')) {
 		// If the bot can't send to the channel...
 		msg.author.send("I can't send messages to that channel!");
@@ -17,7 +17,6 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
-	let args = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	var r=0;
 	function getMessagesBef(msgid){
 		console.log('finding next 100');
