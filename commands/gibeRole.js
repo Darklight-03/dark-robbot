@@ -10,7 +10,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		return;
 	}
 	// Check for cooldown, if on cooldown notify user of it and abort command execution.
-	var args = msg.content.substr(config.commandPrefix.length + command.length + 2);
+	var args = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	var roles = msg.guild.roles;
 	var validroles = [];
 

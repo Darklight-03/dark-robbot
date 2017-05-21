@@ -5,7 +5,7 @@ const moment = require('moment'); // Part of log writing
 exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command function
 	if (!botPerm.hasPermission('SEND_MESSAGES')) {
 		// If the bot can't send to the channel...
-		msg.author.sendMessage("I can't send messages to that channel!");
+		msg.author.send("I can't send messages to that channel!");
 		// ...PM the user...
 		return; // ...and abort command execution.
 	}
@@ -20,7 +20,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
-	msg.channel.sendMessage(`__**${bot.user.username} is currently on the following servers:**__ \n\n${bot.guilds.map(g => `${g.name} - **${g.memberCount} Members**`).join(`\n`)}`, {
+	msg.channel.send(`__**${bot.user.username} is currently on the following servers:**__ \n\n${bot.guilds.map(g => `${g.name} - **${g.memberCount} Members**`).join(`\n`)}`, {
 		split: true
 	});
 	fs.appendFileSync(`${config.logPath}${config.serverLog}`, `\n[${moment().format('DD/MM/YYYY HH:mm:ss')}][STATISTICS] ${msg.author.username}#${msg.author.discriminator} successfully used the "${msg.content.substr(config.commandPrefix.length + 1, command.length)}" command on the '${msg.guild}' server!`);

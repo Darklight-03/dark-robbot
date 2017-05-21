@@ -17,7 +17,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		// ...notify the user that they are not authorized...
 		return; // ...and abort command execution.
 	}
-	var UserID = msg.content.substr(config.commandPrefix.length + command.length + 2);
+	var UserID = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	// Select the mention part of the message (<@(!)..>) for ignoreList purposes
 	var match = UserID.match(/<@!?(\d+)>/);
 	// Search for mention syntax, regex courtesy of /u/geo1088 on reddit.

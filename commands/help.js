@@ -17,7 +17,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		serverConfig.serverConfig[`serverconf_${msg.guild.id}`] = [];
 		// ...define the list of disabled commands as empty array (to avoid crashes).
 	}
-	var arg = msg.content.substr(config.commandPrefix.length + command.length + 2);
+	var arg = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	// Get possible argument from message
 	if (arg) {
 		// If there is an argument...

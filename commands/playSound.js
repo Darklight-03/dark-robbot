@@ -81,7 +81,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	});
 	var sounds = ["eugh1", "eugh2", "eugh3", "eugh4", "explosion", "itai", "n", "name", "plosion", "pull", "sion", "yamero", "magic-item", "parents", "hyoizaburo", "oi", "igiari", "hmph", "zuryah", "whatsthis", "who", "yes", "yoroshii", "tropes", "truepower", "waah", "wellthanks", "oh", "shouganai", "sigh", "splat", "itscold", "ladiesfirst", "mywin", "nani", "dontwanna", "doushimashou", "friends", "hau", "isee", "bighug", "chomusuke", "comeatme", "dododo", "are", "aughh"];
 	// Set available files,...
-	var sound = msg.content.substr(config.commandPrefix.length + command.length + 2).toLowerCase();
+	var sound = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace).toLowerCase();
 	// ...then set sound var to chosen sound file.
 	if (sounds.indexOf(sound) == -1) {
 		// If chosen sound file is not available...
