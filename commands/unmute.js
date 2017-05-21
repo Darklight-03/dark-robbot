@@ -11,7 +11,6 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	}
 	if(typeof msg.mentions.users.first() !== 'undefined'){
 		// Check for cooldown, if on cooldown notify user of it and abort command execution.
-		let args = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 		let users = msg.guild.members;
 		let mutee = users.get(msg.mentions.users.first().id);
 		//console.log(msg.mentions.users.first());
