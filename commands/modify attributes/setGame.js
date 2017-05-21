@@ -1,4 +1,4 @@
-const config = require('../config.json'); // Import configuration
+const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
 
