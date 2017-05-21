@@ -1,5 +1,5 @@
 const config = require('../config.json'); // Import configuration
-const request = require('request'); // For website interaction
+
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
 const prism = require('prism-media'); // Prism for smoother file playing of very short files

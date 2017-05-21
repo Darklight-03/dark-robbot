@@ -3,10 +3,17 @@ const fs = require('fs'); // For reading the command files
 var normalizedPath = require("path").join(__dirname, config.commandPath); // Fix the path to be used in condition checks
 var commands = {}; // Object of existing commands
 
+
+
+
 // Load all commands from the commandPath (below) -- command handler courtesy of RShadowhand on Github
 fs.readdirSync(normalizedPath).forEach(function(file) {
+//	console.log(file);
+	if(!fs.lstatSync(normalizedPath+""+file).isFile()){
+		console.log(file);
+	}
 	// Look at all the files in the specificed folder
-	if (file.substr(-3, 3) == ".js") {
+	else if (file.substr(-3, 3) == ".js") {
 		// If the file is a .js file...
 		var ModuleName = file.slice(0, -3).toLowerCase();
 		// ...remove ".js" bit from the file names, convert it to lowercase,..
