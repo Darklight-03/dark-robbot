@@ -3,7 +3,6 @@ const bot = new Discord.Client(); // Initialize bot instance
 const config = require('./config.json'); // Import configuration
 const fs = require('fs'); // For ignore list checking
 var Events = require('./event_handler.js'); // Load event handler
-var ignoreLists = require('./ignore_handler.js'); // Load ignore handler
 var commandHandler = require('./commandHandler.js'); // Load command handler
 var Commands = require('./command_loader.js'); // Load command loader
 		Commands.initialize(require("path").join(__dirname, config.commandPath));
