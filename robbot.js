@@ -4,7 +4,8 @@ const config = require('./config.json'); // Import configuration
 const fs = require('fs'); // For ignore list checking
 var Events = require('./event_handler.js'); // Load event handler
 var ignoreLists = require('./ignore_handler.js'); // Load ignore handler
-var Commands = require('./command_loader.js'); // Load command handler
+var commandHandler = require('./commandHandler.js'); // Load command handler
+var Commands = require('./command_loader.js'); // Load command loader
 		Commands.initialize(require("path").join(__dirname, config.commandPath));
 //		console.log(Commands.commands);
 var serverConfig = require('./serverconfig_handler.js'); // Load serverConfig handler
@@ -59,7 +60,7 @@ var timeout = {
 setInterval(function () {
 	let n = Math.floor(Math.random() * (playableGames.games.length - 0));
 	bot.user.setGame(playableGames.games[n]);
-}, 15000); // Repeats every 15 seconds, what we believe to be the rate cap of changing games being played.
+}, 60*1000); // Repeats every 60 seconds, which is already faster than necessary
 
 setInterval(() => {
 	try {
@@ -121,6 +122,8 @@ bot.on('message', msg => { // Listen to all messages sent
 	if (msg.content == config.commandPrefix) {
 		return;
 	} // Ignore empty commands (messages containing just the prefix)
+	commandHandler.runCommand(bot,msg,timeout,Commands.commands);
+	
 	if (fs.existsSync(`${config.ignorePath}ignore_${msg.guild.id}.json`)) {
 		/*
 		Check if an ignore file for the server the command is used on exists
