@@ -23,10 +23,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export 
 		//console.log(msg.mentions.users.first());
 		let muted = msg.guild.roles.find("name", 'Muted').id;
 		var epoch = (new Date).getTime();
-		//var epoch_unmute = lengthMute + epoch;
-		
 
-		//TODO figure out ^^
 		try {
 			if (!msg.member.hasPermission("KICK_MEMBERS")) {
 				msg.reply("U R NOT A MODERATOR");
