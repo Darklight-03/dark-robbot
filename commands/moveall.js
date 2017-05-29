@@ -2,7 +2,7 @@ const config = require('../config.json');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm, args){
     if (!msg.member.hasPermission("KICK_MEMBERS")) {
-				msg.reply("U R NOT A MODERATOR");
+				say.reply(msg,"U R NOT A MODERATOR");
     }
     else{
         let server = msg.guild;
