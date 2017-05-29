@@ -2,6 +2,7 @@ const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
 const prism = require('prism-media'); // Prism for smoother file playing of very short files
+const say = require('../Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command function
 	var command = "giberole"; // For logging purposes
@@ -25,17 +26,17 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export 
 	let role = msg.guild.roles.find("name", args);
 	try {
 		if (msg.member.roles.has(role.id)) {
-			msg.reply("u already have dis role noob");
+			say.reply(msg,"u already have dis role noob");
 		} else {
 			if (validroles.includes(role.name)) {
 				msg.member.addRole(role);
-				msg.reply("role added");
+				say.reply(msg,"role added");
 			} else {
-				msg.reply("no permission for dis role");
+				say.reply(msg,"no permission for dis role");
 			}
 		}
 	} catch (err) {
-		msg.reply("failed to add role (maybe no permission, maybe the role does not exist)");
+		say.reply(msg,"failed to add role (maybe no permission, maybe the role does not exist)");
 	}
 
 };

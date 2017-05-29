@@ -1,6 +1,7 @@
 const config = require('../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
+const say = require('./Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command function
 	if (!botPerm.hasPermission('SEND_MESSAGES')) {
@@ -16,7 +17,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution
 	if (msg.author.id !== config.ownerID) {
 		// If the user is not authorized ...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}

@@ -1,6 +1,7 @@
 const config = require('../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
+const say = require('./Basic tasks/say.js');
 /*
 INFO: The shutdown command goes into effect whether the bot can send the confirmation message or not.
 */
@@ -12,11 +13,11 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution
 	if (msg.author.id !== config.ownerID) {
 		// If the user is not authorized...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
-	msg.reply(`${bot.user.username} shutting down! Bye!`);
+	say.reply(msg,`${bot.user.username} shutting down! Bye!`);
 	setTimeout(function() {
 		// Define timeout for bot shutdown, in which...
 		bot.destroy();

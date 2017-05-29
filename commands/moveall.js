@@ -1,4 +1,5 @@
 const config = require('../config.json');
+const say = require('./Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm, args){
     if (!msg.member.hasPermission("KICK_MEMBERS")) {

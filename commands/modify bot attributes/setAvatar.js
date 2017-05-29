@@ -1,6 +1,7 @@
 const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
+const say = require('../Basic tasks/say.js');
 
 // INFO: The command will execute whether or not the bot can send messages to the channel. Erorr messages will be sent via PM if it can't.
 
@@ -12,7 +13,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution.
 	if (msg.author.id !== config.ownerID) {
 		// If the user is not authorized...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
@@ -31,13 +32,13 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 			return; // ...and abort command execution.
 		}
 		// ... 2) and if the bot send a message to the channel
-		msg.reply("invalid file or URL.");
+		say.reply(msg,"invalid file or URL.");
 		// ...notify the user of the error...
 		return; // ...and abort command execution.
 	}
 	if (arg.substr(-4, 4) !== ".png" && arg.substr(-4, 4) !== ".jpg" && arg.substr(-4, 4) !== ".gif" && arg.substr(-5, 5) !== ".jpeg" && arg.substr(-5, 5) !== ".webp") {
 		// If the argument file is not a png, jpg/jpeg, gif or webp, reject it
-		msg.reply("invalid file format! Only png, jpg/jpeg, gif and webp are allowed.");
+		say.reply(msg,"invalid file format! Only png, jpg/jpeg, gif and webp are allowed.");
 		return;
 	}
 	bot.user.setAvatar(arg); // Set the bot's avatar to the arg...
@@ -49,7 +50,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		return; // ...and abort command execution.
 	}
 	// If the bot can send to the channel...
-	msg.reply(`successfully set my avatar to '${arg}' ! \n (May not have worked if ratelimit has been capped)`);
+	say.reply(msg,`successfully set my avatar to '${arg}' ! \n (May not have worked if ratelimit has been capped)`);
 	// ...notify the user of the successful command execution.
 };
 exports.desc = "change the bot's avatar [Bot owner only]"; // Export command description

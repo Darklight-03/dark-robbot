@@ -1,4 +1,4 @@
-var say = require('./Basic tasks/say.js');
+const say = require('./Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
 	if (!botPerm.hasPermission('SEND_MESSAGES')) {

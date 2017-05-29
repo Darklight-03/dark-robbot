@@ -1,5 +1,6 @@
 const config = require('../config.json'); // Import configuration
 var Commands = require('../command_loader.js'); // Import list of commands
+const say = require('./Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
 	var command = "help"; // For logging purposes

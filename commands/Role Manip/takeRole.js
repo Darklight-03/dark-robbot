@@ -2,6 +2,7 @@ const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
 const prism = require('prism-media'); // Prism for smoother file playing of very short files
+const say = require('../Basic tasks/say.js');
 
 exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
 	var command = "takerole"; // For logging purposes
@@ -19,27 +20,30 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
 	}
 	roles.forEach(listMap);
 	//console.log(validroles);
-	if (args.charAt(0) != '-') {
-		args = "-" + args;
+	if (args[0].charAt(0) != '-') {
+		args = "-" + args[0];
+	}
+	else{
+		args = args[0];
 	}
 	let role = msg.guild.roles.find("name", args);
 	if (role == null) {
-		msg.reply("I CANNOT TAKE THIS ROLE");
+		say.reply(msg,"I CANNOT TAKE THIS ROLE");
 	} else {
 
 		try {
 			if (msg.member.roles.has(role.id)) {
 				if (validroles.includes(role.name)) {
 					msg.member.removeRole(role);
-					msg.reply("STOLE ROLE " + role.toString() + " FROM " + msg.member.toString());
+					say.reply(msg,"STOLE ROLE " + role.toString() + " FROM " + msg.member.toString());
 				} else {
-					msg.reply("I CANNOT TAKE THIS ROLE");
+					say.reply(msg,"I CANNOT TAKE THIS ROLE");
 				}
 			} else {
-				msg.reply("I CANNOT TAKE WHAT YOU DON'T HAVE");
+				say.reply(msg,"I CANNOT TAKE WHAT YOU DON'T HAVE");
 			}
 		} catch (err) {
-			msg.reply("error " + err.toString());
+			say.reply(msg,"error " + err.toString());
 		}
 	}
 

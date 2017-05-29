@@ -1,6 +1,7 @@
 const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
+const say = require('../Basic tasks/say.js');
 
 // INFO: The command will execute whether or not the bot can send messages to the channel.
 
@@ -12,7 +13,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution
 	if (msg.author.id !== config.ownerID && (!userPerm.hasPermission("KICK_MEMBERS") || !userPerm.hasPermission("BAN_MEMBERS"))) {
 		// If the user is not the bot owner and does not have kick or ban permissions...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user that they are not authorized...
 		return; // ...and abort command execution.
 	}
@@ -24,7 +25,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	*/
 	if (msg.content.length == config.commandPrefix.length + command.length + 1) {
 		// If there is no argument (only prefix and command)...
-		msg.reply("specify a nickname to set the bot to!");
+		say.reply(msg,"specify a nickname to set the bot to!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
@@ -32,7 +33,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	msg.guild.member(bot.user).setNickname(arg); // ...then set the bot's username to the arg...
 	fs.appendFileSync(`${config.logPath}${config.profileLog}`, `\n[${moment().format('DD/MM/YYYY HH:mm:ss')}][USERNAME] ${msg.author.username}#${msg.author.discriminator} set ${bot.user.username}'s nickname to '${arg}' on the '${msg.guild}' server!`); // ...and log command use, when and by whom.
 	console.log(`${bot.user.username}'s nickname set to '${arg}' ! (${msg.author.username}#${msg.author.discriminator} on '${msg.guild}')`);
-	msg.reply(`successfully set my nickname to '${arg}' ! \n(May not have worked if the bot isn't allowed to set its own nickname)`);
+	say.reply(msg,`successfully set my nickname to '${arg}' ! \n(May not have worked if the bot isn't allowed to set its own nickname)`);
 	// Notify user of successful command execution
 };
 exports.desc = "set the bot's nickname for this server [Bot owner or Kick/Ban Permission required]"; // Export command description

@@ -1,6 +1,7 @@
 const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing
 const moment = require('moment'); // Part of log writing
+const say = require('../Basic tasks/say.js');
 
 // INFO: The command will execute whether or not the bot can send messages to the channel.
 
@@ -12,7 +13,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution
 	if (msg.author.id !== config.ownerID) {
 		// If the user is not authorized...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
@@ -24,7 +25,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	*/
 	if (msg.content.length == config.commandPrefix.length + command.length + 1) {
 		// If there is no argument (only prefix and command)...
-		msg.reply("specify a username to set the bot to!");
+		say.reply(msg,"specify a username to set the bot to!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
@@ -32,7 +33,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	bot.user.setUsername(arg); // ...then set the bot's username to the arg...
 	fs.appendFileSync(`${config.logPath}${config.profileLog}`, `\n[${moment().format('DD/MM/YYYY HH:mm:ss')}][USERNAME] ${msg.author.username}#${msg.author.discriminator} successfully used the "${msg.content.substr(config.commandPrefix.length + 1, command.length)}" command on the '${msg.guild}' server!`); // ...and log command use, when and by whom.
 	console.log(`${bot.user.username}'s username set to '${arg}' ! (${msg.author.username}#${msg.author.discriminator} on '${msg.guild}')`);
-	msg.reply(`successfully set my username to '${arg}' ! \n(May not have worked if ratelimit capped)`);
+	say.reply(msg,`successfully set my username to '${arg}' ! \n(May not have worked if ratelimit capped)`);
 	// Notify user of successful command execution
 };
 exports.desc = "change the bot's username [Bot owner only]"; // Export command description
