@@ -27,7 +27,6 @@ reply = function(msg, content){
         msg.reply(String(content)).then((message)=>{
             setTimeout(()=>{
                 message.delete();
-                msg.delete();
             },1000*60*3);
         });
 };

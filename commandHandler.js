@@ -24,6 +24,9 @@ exports.runCommand = function(bot,msg,timeout,commands){
 	if (Object.keys(commands).indexOf(command) > -1) {
 		// If the given command is an actual command that is available...
 		commands[command].main(bot, msg, timeout, botPerm, userPerm, argsfinal);
+		setTimeout(()=>{
+        	msg.delete();
+        },1000*60*3);
 		// ...run the command.
 	}
 };
