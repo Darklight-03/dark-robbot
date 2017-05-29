@@ -16,8 +16,18 @@ exports.reply = function(msg, content){
 
 reply = function(msg, content){
     if(String(content).length > 2000){
-            msg.reply(String(content).slice(0,2000));
+            msg.reply(String(content).slice(0,2000)).then((message)=>{
+                setTimeout(()=>{
+                    message.delete();
+                    msg.delete();
+                },1000*60*3);
+            });
             return reply(msg, String(content).slice(2000,String(content).length));
         }
-        msg.reply(String(content));
+        msg.reply(String(content)).then((message)=>{
+            setTimeout(()=>{
+                message.delete();
+                msg.delete();
+            },1000*60*3);
+        });
 };
