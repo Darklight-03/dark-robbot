@@ -20,7 +20,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export 
 	}
 	roles.forEach(listMap);
 	//console.log(validroles);
-	if (args.charAt(0) != '-') {
+	if (args[0].charAt(0) != '-') {
 		args = "-" + args;
 	}
 	let role = msg.guild.roles.find("name", args);
