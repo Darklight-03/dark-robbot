@@ -1,6 +1,6 @@
 const config = require('../config.json'); // Import configuration
-var Commands = require('../command_handler.js'); // Import list of commands
-var serverConfig = require('../serverconfig_handler.js'); // Load list of disabled commands
+var Commands = require('../command_loader.js'); // Import list of commands
+const say = require('./Basic tasks/say.js');
 
 exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
 	var command = "help"; // For logging purposes
@@ -12,12 +12,8 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	// Check for cooldown, if on cooldown notify user of it and abort command execution
 	var cmdList = Object.keys(Commands.commands);
 	// Get all command names (keys) from commands object
-	if (serverConfig.serverConfig[`serverconf_${msg.guild.id}`] == undefined) {
-		// If there are no disabled commands for the server...
-		serverConfig.serverConfig[`serverconf_${msg.guild.id}`] = [];
-		// ...define the list of disabled commands as empty array (to avoid crashes).
-	}
-	var arg = msg.content.substr(config.commandPrefix.length + command.length + 2);
+
+	var arg = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	// Get possible argument from message
 	if (arg) {
 		// If there is an argument...
@@ -32,7 +28,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		commandsExpl.push(`'${cmdList[i]}' -- ${Commands.commands[cmdList[i]].desc}`);
 		// Push each command including its description into the commandsExpl array
 	}
-	msg.author.send(`**__Available commands are:__**\n\n${commandsExpl.join("\n")}\n\nUse '${config.commandPrefix + " " + command} <commandname>' to get syntax help on a command!\n\n**Commands disabled on the \`\`${msg.guild.name}\`\` server are: ${serverConfig.serverConfig[`serverconf_${msg.guild.id}`].join(", ")}**`);
+	msg.author.send(`**__Available commands are:__**\n\n${commandsExpl.join("\n")}\n\nUse '${config.commandPrefix + " " + command} <commandname>' to get syntax help on a command!`);
 	// Join commandsExpl array with newline seperator and send it all as one message
 };
 exports.desc = "displays this message"; // Export command description

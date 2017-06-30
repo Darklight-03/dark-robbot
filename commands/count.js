@@ -1,6 +1,7 @@
 const config = require('../config.json'); // Import configuration
+const say = require('./Basic tasks/say.js');
 
-exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
+exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command's function
 	if (!botPerm.hasPermission('SEND_MESSAGES')) {
 		// If the bot can't send to the channel...
 		msg.author.send("I can't send messages to that channel!");
@@ -13,11 +14,10 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 	}
 	if(msg.author.id !== config.ownerID) {
 		// If the user is not authorized...
-		msg.reply("you are not authorized to use this command!");
+		say.reply(msg,"you are not authorized to use this command!");
 		// ...notify the user...
 		return; // ...and abort command execution.
 	}
-	let args = msg.content.substr(config.commandPrefix.length + command.length + 1 + config.needsSpace);
 	var r=0;
 	function getMessagesBef(msgid){
 		console.log('finding next 100');
@@ -48,36 +48,12 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
 		});
 	}
 	function done(){
-		msg.reply(`found ${r} occurances of ${args}`);
+		say.reply(msg,`found ${r} occurances of ${args}`);
 	}
 	if(!(!args)){
 		getMessagesBef(msg.id);
-		msg.reply(`looking through ENTIRE CHANNEL for ${args}, warning this may take a VERY long time.`);
+		say.reply(msg,`looking through ENTIRE CHANNEL for ${args}, warning this may take a VERY long time.`);
 	}
-	// msg.reply(msg.content);
-	// msg.channel.fetchMessages({limit: 100}).then(messages => {
-	// 	s = `Received ${messages.size} messages`;
-	// 	r = 0;
-	// 	messages.forEach((messagee)=>{
-	// 		console.log(messagee.toString());
-	// 		m = messagee.toString();
-	// 		b=m.match(/:topnep:/g);
-	// 		if(!(!b)){
-	// 			console.log(b);
-	// 			r=r+(b.length);
-	// 		}
-			
-	// 	});
-	// 	msg.reply(s);
-	// 	msg.reply(r);
-	// });
-	// // m = msg.toString();
-	// b=m.match(/:topnep:/g);
-	// if(!(!b)){
-	// 	console.log(b);
-	// 	msg.reply(b.length);
-	// }
-
 };
 
 exports.desc = "counts all occurences of text"; // Export command description
