@@ -103,10 +103,10 @@ setInterval(() => {
 }, 30000);
 
 bot.on('message', msg => { // Listen to all messages sent
-	//database.addMessage(msg);
 	if (msg.author.bot) {
 		return;
 	} // Ignore any bot messages
+	database.addMessage(msg);
 	if (msg.channel.type == "dm") {
 		// If the message is from a private channel...
 		msg.channel.send(DMResponses.responses[Math.floor(Math.random() * (DMResponses.responses.length))]);
