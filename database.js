@@ -12,6 +12,18 @@ exports.connect = function(){
   db.connect();
 };
 exports.initializeTables = function(){
+  db.query('SET CHARACTER SET \'utf8mb4\';', (error, results, fields) => {
+    if(error) throw error;
+    if(typeof results !== 'undefined'){
+      console.log('initialized muted table');
+    }
+  });
+  db.query('SET NAMES \'utf8mb4\';', (error, results, fields) => {
+    if(error) throw error;
+    if(typeof results !== 'undefined'){
+      console.log('initialized muted table');
+    }
+  });
 	db.query('CREATE TABLE IF NOT EXISTS muted ( \
   member_id VARCHAR(30) NOT NULL, \
   guild_id VARCHAR(30) NOT NULL, \
@@ -19,10 +31,42 @@ exports.initializeTables = function(){
   );', (error, results, fields) => {
     if(error) throw error;
     if(typeof results !== 'undefined'){
-      console.log('initialized tables');
+      console.log('initialized muted table');
+    }
+  });
+  db.query('CREATE TABLE IF NOT EXISTS messages ( \
+  msg_id VARCHAR(30) NOT NULL, \
+  msg_content VARCHAR(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL, \
+  msg_author_id VARCHAR(30) NOT NULL, \
+  msg_guild_id VARCHAR(30) NOT NULL, \
+  msg_channel_id VARCHAR(30) NOT NULL, \
+  msg_createdTimestamp BIGINT(64) UNSIGNED, \
+  PRIMARY KEY (msg_id, msg_channel_id) \
+  );', (error, results, fields) => {
+    if(error) throw error;
+    if(typeof results !== 'undefined'){
+      console.log('initialized messages table');
     }
   });
 };
+exports.addMessage = function(msg){
+  db.query('INSERT INTO messages (msg_id, msg_content, msg_author_id, msg_guild_id, msg_channel_id, msg_createdTimestamp) \
+  VALUES (?, ?, ?, ?, ?, ?);', [msg.id, msg.content, msg.author.id, msg.guild.id, msg.channel.id, msg.createdTimestamp], (error,results,fields) => {
+    if(error) throw error;
+    if(typeof results !== 'undefined'){
+      // console.log('added muted ',results);
+    }
+  });
+}
+exports.replaceMessage = function(msg){
+  db.query('REPLACE INTO messages (msg_id, msg_content, msg_author_id, msg_guild_id, msg_channel_id, msg_createdTimestamp) \
+  VALUES (?, ?, ?, ?, ?, ?);', [msg.id, msg.content, msg.author.id, msg.guild.id, msg.channel.id, msg.createdTimestamp], (error,results,fields) => {
+    if(error) throw error;
+    if(typeof results !== 'undefined'){
+      // console.log('added muted ',results);
+    }
+  });
+}
 exports.removeMuted = function(member_id,guild_id){
   db.query('DELETE FROM muted WHERE member_id = ? AND guild_id = ?',[member_id,guild_id],(error,results,fields) => {
     if(error) throw error;

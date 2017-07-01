@@ -103,6 +103,7 @@ setInterval(() => {
 }, 30000);
 
 bot.on('message', msg => { // Listen to all messages sent
+	//database.addMessage(msg);
 	if (msg.author.bot) {
 		return;
 	} // Ignore any bot messages
@@ -120,7 +121,7 @@ bot.on('message', msg => { // Listen to all messages sent
 		return;
 	} // Ignore empty commands (messages containing just the prefix)
 	commandHandler.runCommand(bot,msg,timeout,Commands.commands);
-	
+	//run real commands
 });
 
 bot.login(config.token); // Log the bot in with token set in config
