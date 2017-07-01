@@ -14,7 +14,7 @@ syncCommands = function(path){
 
 
 		if(!fs.lstatSync(path+""+file).isFile()){
-			syncCommands(path+""+file+"\\");
+			syncCommands(path+""+file+"/");
 		}
 
 		// Look at all the files in the specificed folder
