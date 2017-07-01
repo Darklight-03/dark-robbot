@@ -6,5 +6,6 @@
     "commandPrefix": "!",
     "useDiscordBots": false,
     "discordBotsAPI": "API_TOKEN",
-    "needsSpace": 0
+    "needsSpace": 0,
+    "defaultVoiceChannel": "151880326547898371"
 }
