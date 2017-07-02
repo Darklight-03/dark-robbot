@@ -9,11 +9,15 @@ var Commands = require('./command_loader.js'); // Load command loader
 var playableGames = require('./res/games.json'); //loads all the games that the bot can play
 var DMResponses = require('./res/DMResponses.json');
 var database = require('./database.js');
+var levelManager = require('./levelManager.js');
 
 database.connect();
 
 bot.once('ready', () => { // Ready message once bot is loaded
 	Events.ready(bot);
+	database.countMessages().then((num)=>{
+		bot.user.setGame(`${num} messages in database`);
+	});
 });
 
 bot.on('error', () => { // Listen to errors
@@ -54,17 +58,18 @@ var timeout = {
 	}
 };
 
+//change game bot is playing. TODO use to show song playing instead :D
 setInterval(function () {
-	let n = Math.floor(Math.random() * (playableGames.games.length - 0));
-	bot.user.setGame(playableGames.games[n]);
+	// let n = Math.floor(Math.random() * (playableGames.games.length - 0));
+	// bot.user.setGame(playableGames.games[n]);
+	database.countMessages().then((num)=>{
+		bot.user.setGame(`${num} messages in database`);
+	});
 }, 60*1000); // Repeats every 60 seconds, which is already faster than necessary
 
 setInterval(() => {
 	try {
-		//checks muted list to see if anyone needs to be unmuted
-		//console.log('checking muted files');
-		//checks for files
-		
+		//checks muted list to see if anyone needs to be unmuted		
 		database.getMuted('epoch_unmute').then((result) => {
 			times = result;
 			database.getMuted('member_id').then((result) => {
@@ -106,7 +111,7 @@ bot.on('message', msg => { // Listen to all messages sent
 	if (msg.author.bot) {
 		return;
 	} // Ignore any bot messages
-	database.addMessage(msg);
+
 	if (msg.channel.type == "dm") {
 		// If the message is from a private channel...
 		msg.channel.send(DMResponses.responses[Math.floor(Math.random() * (DMResponses.responses.length))]);
@@ -115,6 +120,8 @@ bot.on('message', msg => { // Listen to all messages sent
 		// ...and abort command execution.
 	}
 	if (!msg.content.startsWith(config.commandPrefix)) {
+		database.addMessage(msg);
+		levelManager.handleMessage(msg);
 		return;
 	} // Don't listen to messages not starting with bot prefix
 	if (msg.content == config.commandPrefix) {
