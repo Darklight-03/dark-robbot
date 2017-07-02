@@ -9,7 +9,7 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
     }
     function addChannel(channel, channelarray){
         if(channel.type=='text'){
-            channelUtils.getAllMessages(channel).then(arr => {
+            channelUtils.getAllMessagesDisc(channel).then(arr => {
                 arr.forEach((message)=>{
                     database.replaceMessage(message);
                 });

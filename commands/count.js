@@ -13,16 +13,10 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
 	if (timeout.check(msg.author.id, msg)) {
 		return;
 	}
-	if (msg.author.id !== config.ownerID) {
-		// If the user is not authorized...
-		say.reply(msg, "you are not authorized to use this command!");
-		// ...notify the user...
-		return; // ...and abort command execution.
-	}
 
 	var r = 0;
 	if (!(!args)) {		//if not null arguments start.
-		say.reply(msg, `looking through ENTIRE CHANNEL for ${args}, warning this may take a VERY long time.`);
+		say.reply(msg, `looking through ENTIRE CHANNEL for ${args}, warning this may take a VERY short time.`);
 	} else {
 		return;
 	}
@@ -30,7 +24,7 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
 	channelUtils.getAllMessages(msg.channel).then((messages) => {
 		//for each message, run regex check and count them
 		messages.forEach((messagee) => {
-			m = messagee.toString();
+			m = messagee.msg_content;
 			let re = new RegExp(args, 'gi');
 			b = m.match(re);
 			if (!(!b)) {
