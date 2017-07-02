@@ -94,12 +94,12 @@ exports.addXP = function (msg) {
   // get correct users data
   db.query('SELECT * FROM levels WHERE user_id=? AND guild_id=?', [msg.author.id, msg.guild.id], (error, results, fields) => {
     if (error) throw error;
-    //if there is no data, create it starting at level 9999 with 1 xp
+    //if there is no data, create it starting at level 999 with 1 xp
     if (!results[0]) {
       db.query('INSERT INTO levels (user_id, guild_id, next_xp_epoch, xp, level) \
-      VALUES (?, ?, ?, ?, ?);', [msg.author.id, msg.guild.id, Date.now() + 60000, 1, 9999], (error, results, fields) => {
+      VALUES (?, ?, ?, ?, ?);', [msg.author.id, msg.guild.id, Date.now() + 60000, 1, 999], (error, results, fields) => {
         if (error) throw error;
-        say.reply(msg, `lol noob spammer, you have been demoted to level 9999`);
+        say.reply(msg, `lol noob spammer, you have been demoted to level 999`);
       });
       return 1;
     } else {
@@ -111,10 +111,18 @@ exports.addXP = function (msg) {
         console.log('running code');
         var isLevelUp=0;
         //if they have enough xp to gain a level, send congrats and save var.
-        if (levelManager.nextLevel(results[0].level) < results[0].xp + 1) {
-
-          say.reply(msg, `lol noob spammer, you have been demoted to level ${results[0].level - 1}`)
-          isLevelUp = 1;
+        function checkLevelUp(lvl){
+          if (levelManager.nextLevel(lvl) < results[0].xp + 1) {
+            isLevelUp++;
+            checkLevelUp(lvl-1);
+          }
+        }
+        checkLevelUp(results[0].level);
+        if(isLevelUp==1){
+          say.reply(msg, `lol noob spammer, you have been demoted to level ${results[0].level - isLevelUp}`);
+        }
+        if(isLevelUp>1){
+          say.reply(msg, `lol noob spammer, you have been demoted to level ${results[0].level - isLevelUp} (gained ${isLevelUp} levels!)`);
         }
         db.query(`UPDATE levels SET xp = ${results[0].xp + 1}, next_xp_epoch = ${Date.now() + 60000}, level=${results[0].level - isLevelUp} WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`);
         // db.query('REPLACE INTO levels (user_id, guild_id, next_xp_epoch, xp, level) \
@@ -122,6 +130,8 @@ exports.addXP = function (msg) {
         //   if (error) throw error;
 
         // });
+      }else{
+
       }
     }
   });

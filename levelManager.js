@@ -10,6 +10,11 @@ exports.handleMessage = function handleMessage(msg){
 exports.nextLevel = function(curlevel){
     var baseXP = 6;
     var exponent = 1.2;
-    var level = Math.abs(curlevel-10000);
-    return Math.round(.04 * Math.pow(level,3) + .8 * Math.pow(level,2) + 2 * level)
+    var level = -1*(curlevel-1000);
+    if(level<100){
+        return Math.round((.04 * Math.pow(level,3) + .8 * Math.pow(level,2) + 2 * level)/15);
+    }
+    else{
+        return Math.round(((.04 * Math.pow(100,3) + .8 * Math.pow(100,2) + 2 * 100)+(Math.pow((level-100),1.1)*305))/15);
+    }
 }
