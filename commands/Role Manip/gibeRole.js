@@ -26,15 +26,13 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export 
 	let role = msg.guild.roles.find("name", args);
 	try {
 		if (msg.member.roles.has(role.id)) {
-			say.reply(msg,"u already have dis role noob");
-		} else {
-			if (validroles.includes(role.name)) {
-				msg.member.addRole(role);
-				say.reply(msg,"role added");
-			} else {
-				say.reply(msg,"no permission for dis role");
-			}
+			throw exception;
 		}
+		if (!validroles.includes(role.name)) {
+			throw exception;
+		}
+		msg.member.addRole(role);
+		say.reply(msg,"role added");
 	} catch (err) {
 		say.reply(msg,"failed to add role (maybe no permission, maybe the role does not exist)");
 	}

@@ -17,13 +17,13 @@ exports.initializeTables = function () {
   db.query('SET CHARACTER SET \'utf8mb4\';', (error, results, fields) => {
     if (error) throw error;
     if (typeof results !== 'undefined') {
-      console.log('initialized muted table');
+      console.log('initialized charset');
     }
   });
   db.query('SET NAMES \'utf8mb4\';', (error, results, fields) => {
     if (error) throw error;
     if (typeof results !== 'undefined') {
-      console.log('initialized muted table');
+      console.log('initialized names');
     }
   });
   db.query('CREATE TABLE IF NOT EXISTS muted ( \
@@ -55,15 +55,58 @@ exports.initializeTables = function () {
   guild_id VARCHAR(30) NOT NULL, \
   next_xp_epoch BIGINT(64) UNSIGNED, \
   xp BIGINT(64), \
+  xp_multiplier FLOAT, \
   level INT(4), \
   PRIMARY KEY (user_id, guild_id) \
   );', (error, results, fields) => {
-      if (error) throw error;
-      if (typeof results !== 'undefined') {
-        console.log('initialized levels table');
-      }
-    });
+    if (error) throw error;
+    if (typeof results !== 'undefined') {
+      console.log('initialized levels table');
+    }
+  });
+  db.query('CREATE TABLE IF NOT EXISTS resources ( \
+  user_id VARCHAR(30) NOT NULL, \
+  guild_id VARCHAR(30) NOT NULL, \
+  money BIGINT(64), \
+  gems BIGINT(64), \
+  PRIMARY KEY (user_id, guild_id) \
+  );', (error, results, fields) => {
+    if (error) throw error;
+    if (typeof results !== 'undefined') {
+      console.log('initialized resources table');
+    }
+  });
 };
+/**
+* @param {String} resource - money, gems, any other column in resources db
+* @param {Integer} amount - how much to remove
+* @param {Message} msg - message containing author and guild id
+*/
+exports.takeMoney = function(msg,amount, resource){
+  return new Promise((resolve,reject)=>{
+    db.query(`UPDATE resources SET ${resource} = ${resource} - ${amount} \
+    WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
+    SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
+  });
+}
+/**
+* @param {String} resource - money, gems, any other column in resources db
+* @param {Integer} amount - how much to add
+* @param {Message} msg - message containing author and guild id
+*/
+exports.addMoney = function(msg, amount, resource){
+  return new Promise((resolve,reject)=>{
+    db.query(`UPDATE resources SET ${resource} = ${resource} + ${amount} \
+    WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
+    SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
+  });
+}
 exports.leaderboard = function(guild_id){
   return new Promise((resolve,reject)=>{
     db.query('SELECT * FROM levels WHERE guild_id = ? ORDER BY xp DESC', [guild_id], (error, results, fields) => {
@@ -90,6 +133,7 @@ exports.currentLevelData = function (msg) {
     });
   });
 }
+//TODO move lots of this to levelManager.js
 exports.addXP = function (msg) {
   // get correct users data
   db.query('SELECT * FROM levels WHERE user_id=? AND guild_id=?', [msg.author.id, msg.guild.id], (error, results, fields) => {
@@ -140,11 +184,11 @@ exports.addXP = function (msg) {
 exports.addMessage = function (msg) {
   db.query('INSERT INTO messages (msg_id, msg_content, msg_author_id, msg_guild_id, msg_channel_id, msg_createdTimestamp) \
   VALUES (?, ?, ?, ?, ?, ?);', [msg.id, msg.content, msg.author.id, msg.guild.id, msg.channel.id, msg.createdTimestamp], (error, results, fields) => {
-      if (error) throw error;
-      if (typeof results !== 'undefined') {
-        // console.log('added muted ',results);
-      }
-    });
+    if (error) throw error;
+    if (typeof results !== 'undefined') {
+      // console.log('added muted ',results);
+    }
+  });
 }
 exports.getMessages = function () {
   return new Promise((resolve, reject) => {
