@@ -10,6 +10,9 @@ var db = mysql.createConnection({
   password: 'fghg',
   database: 'botdb'
 });
+var initialLevel = 999;
+
+
 exports.connect = function () {
   db.connect();
 };
@@ -59,11 +62,11 @@ exports.initializeTables = function () {
   level INT(4), \
   PRIMARY KEY (user_id, guild_id) \
   );', (error, results, fields) => {
-    if (error) throw error;
-    if (typeof results !== 'undefined') {
-      console.log('initialized levels table');
-    }
-  });
+      if (error) throw error;
+      if (typeof results !== 'undefined') {
+        console.log('initialized levels table');
+      }
+    });
   db.query('CREATE TABLE IF NOT EXISTS resources ( \
   user_id VARCHAR(30) NOT NULL, \
   guild_id VARCHAR(30) NOT NULL, \
@@ -71,25 +74,25 @@ exports.initializeTables = function () {
   gems BIGINT(64), \
   PRIMARY KEY (user_id, guild_id) \
   );', (error, results, fields) => {
-    if (error) throw error;
-    if (typeof results !== 'undefined') {
-      console.log('initialized resources table');
-    }
-  });
+      if (error) throw error;
+      if (typeof results !== 'undefined') {
+        console.log('initialized resources table');
+      }
+    });
 };
 /**
 * @param {String} resource - money, gems, any other column in resources db
 * @param {Integer} amount - how much to remove
 * @param {Message} msg - message containing author and guild id
 */
-exports.takeMoney = function(msg,amount, resource){
-  return new Promise((resolve,reject)=>{
+exports.takeMoney = function (msg, amount, resource) {
+  return new Promise((resolve, reject) => {
     db.query(`UPDATE resources SET ${resource} = ${resource} - ${amount} \
     WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
     SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
-      if (error) throw error;
-      resolve(results[0]);
-    });
+        if (error) throw error;
+        resolve(results[0]);
+      });
   });
 }
 /**
@@ -97,32 +100,32 @@ exports.takeMoney = function(msg,amount, resource){
 * @param {Integer} amount - how much to add
 * @param {Message} msg - message containing author and guild id
 */
-exports.addMoney = function(msg, amount, resource){
-  return new Promise((resolve,reject)=>{
+exports.addMoney = function (msg, amount, resource) {
+  return new Promise((resolve, reject) => {
     db.query(`UPDATE resources SET ${resource} = ${resource} + ${amount} \
     WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
     SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
-      if (error) throw error;
-      resolve(results[0]);
-    });
+        if (error) throw error;
+        resolve(results[0]);
+      });
   });
 }
-exports.leaderboard = function(guild_id){
-  return new Promise((resolve,reject)=>{
+exports.leaderboard = function (guild_id) {
+  return new Promise((resolve, reject) => {
     db.query('SELECT * FROM levels WHERE guild_id = ? ORDER BY xp DESC', [guild_id], (error, results, fields) => {
-      if(error) throw error;
+      if (error) throw error;
       resolve(results);
     })
   });
 }
-exports.position = function(msg){
-  return new Promise((resolve,reject)=>{
+exports.position = function (msg) {
+  return new Promise((resolve, reject) => {
     db.query('select count(*) AS place \
     from levels \
-    where xp >= (select xp from levels where user_id = ? AND guild_id = ?)', [msg.author.id, msg.guild.id], (error, results, fields)=>{
-      if(error) throw error;
-      resolve(results[0].place);
-    });
+    where xp >= (select xp from levels where user_id = ? AND guild_id = ?)', [msg.author.id, msg.guild.id], (error, results, fields) => {
+        if (error) throw error;
+        resolve(results[0].place);
+      });
   });
 }
 exports.currentLevelData = function (msg) {
@@ -133,62 +136,36 @@ exports.currentLevelData = function (msg) {
     });
   });
 }
-//TODO move lots of this to levelManager.js
-exports.addXP = function (msg) {
-  // get correct users data
-  db.query('SELECT * FROM levels WHERE user_id=? AND guild_id=?', [msg.author.id, msg.guild.id], (error, results, fields) => {
-    if (error) throw error;
-    //if there is no data, create it starting at level 999 with 1 xp
-    if (!results[0]) {
-      db.query('INSERT INTO levels (user_id, guild_id, next_xp_epoch, xp, level) \
-      VALUES (?, ?, ?, ?, ?);', [msg.author.id, msg.guild.id, Date.now() + 60000, 1, 999], (error, results, fields) => {
-        if (error) throw error;
-        say.reply(msg, `lol noob spammer, you have been demoted to level 999`);
-      });
-      return 1;
-    } else {
-
-
-      //if they are able to gain xp and already had data, then add 1 xp and a level if necessary
-      console.log(`need ${levelManager.nextLevel(results[0].level)} have ${results[0].xp + 1}\n time is ${Date.now()}, needs ${results[0].next_xp_epoch}`);
-      if (results[0].next_xp_epoch < Date.now()) {
-        console.log('running code');
-        var isLevelUp=0;
-        //if they have enough xp to gain a level, send congrats and save var.
-        function checkLevelUp(lvl){
-          if (levelManager.nextLevel(lvl) < results[0].xp + 1) {
-            isLevelUp++;
-            checkLevelUp(lvl-1);
-          }
-        }
-        checkLevelUp(results[0].level);
-        if(isLevelUp==1){
-          say.reply(msg, `lol noob spammer, you have been demoted to level ${results[0].level - isLevelUp}`);
-        }
-        if(isLevelUp>1){
-          say.reply(msg, `lol noob spammer, you have been demoted to level ${results[0].level - isLevelUp} (gained ${isLevelUp} levels!)`);
-        }
-        db.query(`UPDATE levels SET xp = ${results[0].xp + 1}, next_xp_epoch = ${Date.now() + 60000}, level=${results[0].level - isLevelUp} WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`);
-        // db.query('REPLACE INTO levels (user_id, guild_id, next_xp_epoch, xp, level) \
-        // VALUES (?, ?, ?, ?, ?);', [msg.author.id, msg.guild.id, Date.now() + 60000, 'xp+1', `level+${isLevelUp}`], (error, results, fields) => {
-        //   if (error) throw error;
-
-        // });
-      }else{
-
-      }
-    }
+exports.getXP = function getXP(msg) {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM levels WHERE user_id=? AND guild_id=?', [msg.author.id, msg.guild.id], (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
   });
-
+}
+exports.addXP = function (msg, xp, level) {
+  db.query(`UPDATE levels SET xp = ${xp}, next_xp_epoch = ${Date.now() + 60000}, level=${level} WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
+    if (error) throw error;
+  });
+}
+exports.insertNewXP = function insertNewXP(msg, amount) {
+  return new Promise((resolve, reject) => {
+    db.query('INSERT INTO levels (user_id, guild_id, next_xp_epoch, xp, level) \
+    VALUES (?, ?, ?, ?, ?);', [msg.author.id, msg.guild.id, Date.now() + 60000, amount, initialLevel], (error, results, fields) => {
+        if (error) throw error;
+        resolve(true);
+      });
+  });
 }
 exports.addMessage = function (msg) {
   db.query('INSERT INTO messages (msg_id, msg_content, msg_author_id, msg_guild_id, msg_channel_id, msg_createdTimestamp) \
   VALUES (?, ?, ?, ?, ?, ?);', [msg.id, msg.content, msg.author.id, msg.guild.id, msg.channel.id, msg.createdTimestamp], (error, results, fields) => {
-    if (error) throw error;
-    if (typeof results !== 'undefined') {
-      // console.log('added muted ',results);
-    }
-  });
+      if (error) throw error;
+      if (typeof results !== 'undefined') {
+        // console.log('added muted ',results);
+      }
+    });
 }
 exports.getMessages = function () {
   return new Promise((resolve, reject) => {
