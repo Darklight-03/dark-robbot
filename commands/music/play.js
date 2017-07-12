@@ -9,20 +9,22 @@ const youtubedl = require('youtube-dl');
 
 exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
 
-
+    if(!args[0]){
+        return;
+    }
 
     if (!args[0].toLowerCase().startsWith('http')) {
         args[0] = 'gvsearch1:' + args[0];
     }
     var vid;
     say.reply(msg, 'Searching...').then(response => {
-        youtubedl.getInfo(args[0], ['-q', '--no-warnings', '--force-ipv4'], (err, info) => {
+        youtubedl.getInfo(args[0], ['-q', '--no-warnings', '--force-ipv4', '-f bestaudio'], (err, info) => {
             if (err || info.format_id === undefined || info.format_id.startsWith('0')) {
-                say.reply(msg, 'Invalid video!');
+                say.reply(msg, `Invalid video ${args[0]}!`);
                 return;
             }
             vid = info;
-            say.reply(msg, 'added '+vid.title+' to queue');
+            say.reply(msg, `added ${vid.title} to queue, ${vid.url}`);
             musicManager.addQueue(vid,msg,bot);
         });
     });

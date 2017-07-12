@@ -52,18 +52,19 @@ function playNext(bot) {
         //play next thing in queue
         play(obj, connection, bot);
         return;
-    }
-    let channel = obj.msg.guild.channels.find('name','Music')
-    if (channel.type == 'voice') {
-        channel.join().then(connection => {
-            //play next thing in queue
-            play(obj,connection,bot);
-        });
+    }else{
+        let channel = obj.msg.guild.channels.find('name','Music')
+        if (channel.type == 'voice') {
+            channel.join().then(connection => {
+                //play next thing in queue
+                play(obj,connection,bot);
+            });
+        }
     }
 }
 
 function play(obj, connection, bot) {
-    queue[0] = new Object({song: queue[0].song, msg: queue[0].msg ,stream: connection.playStream(obj.song.url, { volume: .3 })});
+    queue[0] = new Object({song: obj.song, msg: obj.msg ,stream: connection.playStream(obj.song.url, { volume: .3 })});
     bot.user.setGame(obj.song.title);
     //when song ends, play next one
     queue[0].stream.on('end', () => {
