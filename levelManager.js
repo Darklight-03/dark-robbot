@@ -3,7 +3,7 @@ const database = require('./database.js');
 
 var xp_per_message = 1;
 //add xp on sent message if 1 min has passed
-exports.handleMessage = function handleMessage(msg) {
+function handleMessage(msg) {
     function addToDatabase() {
         return new Promise((resolve, reject) => {
             //if there is no data, create it starting at level 999 with 1 xp
@@ -17,6 +17,12 @@ exports.handleMessage = function handleMessage(msg) {
                     if (results.next_xp_epoch < Date.now()) {
                         if(Math.random()>.999){
                             say.reply(msg, 'Congratulations, You Win an Iphone 7. Please Visit http://www.freeiphones.org for Your Prize!!!');
+                            database.addMoney(msg, 800, 'money');
+                        }
+                        if(Math.random()<.1){
+                            amount = Math.floor(Math.random()*5);
+                            database.addMoney(msg, amount, 'money');
+                            console.log(`added ${amount} money`)
                         }
                         var isLevelUp = 0;
                         //if they have enough xp to gain a level, send congrats and save var.
@@ -46,7 +52,7 @@ exports.handleMessage = function handleMessage(msg) {
 }
 
 //get total xp for next level from curlevel
-exports.nextLevel = function nextLevel(curlevel) {
+function nextLevel(curlevel) {
     var baseXP = 6;
     var exponent = 1.2;
     var level = -1 * (curlevel - 1000);
@@ -57,3 +63,15 @@ exports.nextLevel = function nextLevel(curlevel) {
         return Math.round(((.04 * Math.pow(100, 3) + .8 * Math.pow(100, 2) + 2 * 100) + (Math.pow((level - 100), 1.1) * 305)) / 15);
     }
 }
+
+function getLevelConv(msg){
+    return new Promise((resolve, reject)=>{
+        database.currentLevelData(msg).then((data)=>{
+            resolve(1000-data.level);
+        });
+    });
+}
+
+exports.nextLevel = nextLevel;
+exports.handleMessage = handleMessage;
+exports.getLevelConv = getLevelConv;
