@@ -59,7 +59,6 @@ if (cluster.isMaster) {
 	})
 }
 if (cluster.isWorker) {
-	startWebsite();
 	database.connect();
 
 	bot.once('ready', () => { // Ready message once bot is loaded
@@ -67,6 +66,7 @@ if (cluster.isWorker) {
 		database.countMessages().then((num) => {
 			bot.user.setGame(`${num} messages in database`);
 		});
+		startWebsite();
 	});
 
 	bot.on('error', () => { // Listen to errors
