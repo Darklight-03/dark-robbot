@@ -1,0 +1,6 @@
+extends default
+
+block content
+  form(method="POST" action="/msg")
+    input(type='text', placeholder='your message here' id='message' name='message' value='')
+    input(type='submit' value='Send Message')
