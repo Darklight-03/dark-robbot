@@ -47,8 +47,8 @@ function startWebsite() {
 	});
 
 
-	app.listen(process.env.PORT || 25566, function () {
-		console.log('Listening on http://localhost:' + (process.env.PORT || 3000))
+	app.listen(process.env.PORT || config.websitePort, function () {
+		console.log('Listening on http://localhost:' + (process.env.PORT || config.websitePort))
 	})
 }
 
