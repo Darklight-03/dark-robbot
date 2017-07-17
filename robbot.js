@@ -35,6 +35,7 @@ function startWebsite() {
 	});
 	router.post('/msg', (req, res) => {
 		var message = req.body.message;
+		message = message.replace('@','');
 		bot.guilds.get('151880326547898370').defaultChannel.send(message);
 		res.render('message', { title: 'sent' });
 	});
