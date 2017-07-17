@@ -87,12 +87,23 @@ exports.initializeTables = function () {
 */
 exports.takeMoney = function (msg, amount, resource) {
   return new Promise((resolve, reject) => {
-    db.query(`UPDATE resources SET ${resource} = ${resource} - ${amount} \
-    WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
-    SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
-        if (error) throw error;
-        resolve(results[0]);
-      });
+    db.query(`SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
+      if (error) throw error;
+      var key = Object.keys(results[0])[0];
+      var amnt = results[0][key];
+      if((amnt-amount)>=0){
+        db.query(`UPDATE resources SET ${resource} = ${resource} - ${amount} \
+        WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id};`,(error, results, fields)=>{
+          if(error) throw error;
+          resolve({[key]: amnt-amount})
+        }); 
+      }else{
+        reject( {
+          name: `notEnoughMoneyException`,
+          message: `not enough money for item`
+        });
+      }
+    }); 
   });
 }
 /**

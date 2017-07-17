@@ -8,7 +8,7 @@ const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
 
 var omsg;
-var costOfColor = { price: 10, resource: 'money' };
+var costOfColor = { amount: 10, resource: 'money' };
 
 exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
     omsg = msg;
@@ -23,24 +23,26 @@ function shopMenu1(m) {
     console.log(m.first().content);
     switch (m.first().content) {
         case '1':
-            shopMenuColors();
+            //shopMenuColors();
             var roles = omsg.guild.roles;
             var menuItems = [];
             function listMap(value, key, map) {
                 if (value.name.charAt(0) == '~') {
                     menuItems.push({
                         name: value.name, price: costOfColor, giveItem: () => {
-                            if (omsg.member.roles.has(role.id)) {
-                                throw {title: 'alreadyHaveItException', message: 'you already have this role!'};
+                            console.log(`${omsg.member.displayName} is buying a role`);
+                            if (omsg.member.roles.has(value.id)) {
+                                throw { name: 'alreadyHaveItException', message: 'you already have this role!' };
+                            } else {
+                                omsg.member.addRole(value);
+                                say.reply(omsg, `thank you for your purchase of ${value.name}`);
                             }
-                            omsg.member.addRole(role);
-                            say.reply(omsg, `thank you for your purchase of ${role.name}`);
                         }
                     });
                 }
             }
             roles.forEach(listMap);
-            genericMenu(menuItems, `Color Shop`)
+            genericMenu(menuItems, `Color Shop`);
             break;
         case '2':
             shopMenuXP();
@@ -67,25 +69,30 @@ function shopMenuFeatures() {
 }
 function genericMenu(menuItems, title) {
     var list = '\n';
-    menuItems.forEach(item => {
-        list = `${list}${number}. ${item.name}: ${item.price}\n`;
+    menuItems.forEach((item, number) => {
+        list = `${list}${number}. ${item.name}: ${item.price.amount} ${item.price.resource}\n`;
     });
     say.reply(omsg, `Welcome to the ${title} shop. Pick an option: ${list}`);
     waitForReply(genericBuy, menuItems);
 }
 function genericBuy(collected, menuItems) {
-    var toBuy = menuItems[parseInt(collected)];
-    if (buyItem(toBuy.price.amount, toBuy.price.resource)) {
+    var toBuy = menuItems[parseInt(collected.first())];
+    buyItem(toBuy.price.amount, toBuy.price.resource).then((money) => {
         toBuy.giveItem();
         console.log(`${omsg.author.name} has purchased ${toBuy.name} for ${toBuy.price.amount} ${toBuy.price.resource}s`);
         say.reply(omsg, `successfully purchased ${toBuy.name}`);
-        
-    } else {
-        throw {
-            name: `error`,
-            message: `error occurred buying ${toBuy.name}`
-        };
-    }
+    }).catch((err) => {
+        if(typeof err == 'undefined'){
+            throw {
+                name: `error`,
+                message: `error occurred buying ${toBuy.name}`
+            };
+        }else{
+            throw err;
+        }
+    }).catch((err)=>{
+        say.reply(omsg, `${err.name}: ${err.message}`);
+    });
 }
 function waitForReply(func, args) {
     omsg.channel.awaitMessages(m => {
@@ -95,10 +102,28 @@ function waitForReply(func, args) {
         else return false;
     }, { max: 1, time: 60000, errors: ['time'] })
         .then((collected) => func(collected, args))
-        .catch(collected => { say.reply(omsg, `You did not respond in 1 minute. Please start again. ${collected}`) });
+        .catch(collected => { say.reply(omsg, `You did not respond in 1 minute. Please start again. ${JSON.stringify(collected)}`) });
 }
 function buyItem(cost, resource) {
-    return false;
+    return new Promise((resolve, reject) => {
+        database.takeMoney(omsg, cost, resource).then((data) => {
+            if (data.money >= 0) {
+                console.log(`${omsg.member.displayName} has ${data.money} ${resource} remaining.`);
+                resolve(data.money);
+            }
+            else reject();
+        }).catch((err) => {
+            if(typeof err == 'undefined'){
+                reject({
+                    name: `error`,
+                    message: `error occurred buying item`
+                });
+            }
+            else{
+                reject(err);
+            }
+        });
+    });
 }
 
 exports.desc = "shop menu."; // Export command description
