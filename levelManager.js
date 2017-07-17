@@ -21,7 +21,11 @@ function handleMessage(msg) {
                         }
                         if(Math.random()<.1){
                             amount = Math.floor(Math.random()*5);
-                            database.addMoney(msg, amount, 'money');
+                            database.addMoney(msg, amount, 'money').then((data)=>{
+                                if(typeof data == 'undefined'){
+                                    database.initMoney(msg);
+                                }
+                            });
                             console.log(`added ${amount} money`)
                         }
                         var isLevelUp = 0;

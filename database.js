@@ -103,11 +103,29 @@ exports.takeMoney = function (msg, amount, resource) {
 exports.addMoney = function (msg, amount, resource) {
   return new Promise((resolve, reject) => {
     db.query(`UPDATE resources SET ${resource} = ${resource} + ${amount} \
-    WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}; \
-    SELECT ${resource} FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id}`, (error, results, fields) => {
+    WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id};`, (error, results, fields)=>{
+      if(error) throw error;
+    }); 
+    db.query(`SELECT * FROM resources WHERE user_id=${msg.author.id} AND guild_id=${msg.guild.id};`, (error, results, fields) => {
         if (error) throw error;
         resolve(results[0]);
       });
+  });
+}
+exports.getMoney = function (msg){
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM resources WHERE user_id=? AND guild_id=?;', [msg.author.id, msg.guild.id], (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
+  });
+}
+exports.initMoney = function (msg){
+  return new Promise((resolve, reject) => {
+    db.query('INSERT INTO resources (user_id, guild_id, money, gems) VALUES (?,?,?,?);', [msg.author.id, msg.guild.id, 0, 0], (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
   });
 }
 exports.leaderboard = function (guild_id) {
