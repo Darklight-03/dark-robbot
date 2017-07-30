@@ -14,13 +14,13 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
 	var validroles = [];
 
 	function listMap(value, key, map) {
-		if (value.name.charAt(0) == '-') {
+		if (value.name.charAt(0) == '-' || value.name.charAt(0) == '~') {
 			validroles.push(value.name);
 		}
 	}
 	roles.forEach(listMap);
 	//console.log(validroles);
-	if (args[0].charAt(0) != '-') {
+	if (args[0].charAt(0) != '-' && args[0].charAt(0) != '~') {
 		args = "-" + args[0];
 	}
 	else{
