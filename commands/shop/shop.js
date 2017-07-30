@@ -6,13 +6,14 @@ const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
+const custRole = require('./custRole.js');
 
 var omsg;
 var costOfColor = { amount: 10, resource: 'money' };
 
 exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
     omsg = msg;
-    if (!msg.channel.name == "shop") {
+    if (!(msg.channel.name == "shop")) {
         say.reply(msg, "U R NOT IN SHOP");
         return;
     }
@@ -23,25 +24,7 @@ function shopMenu1(m) {
     console.log(m.first().content);
     switch (m.first().content) {
         case '1':
-            //shopMenuColors();
-            var roles = omsg.guild.roles;
-            var menuItems = [];
-            function listMap(value, key, map) {
-                if (value.name.charAt(0) == '~') {
-                    menuItems.push({
-                        name: value.name, price: costOfColor, giveItem: () => {
-                            console.log(`${omsg.member.displayName} is buying a role`);
-                            if (omsg.member.roles.has(value.id)) {
-                                throw { name: 'alreadyHaveItException', message: 'you already have this role!' };
-                            } else {
-                                omsg.member.addRole(value);
-                                say.reply(omsg, `thank you for your purchase of ${value.name}`);
-                            }
-                        }
-                    });
-                }
-            }
-            roles.forEach(listMap);
+            menuItems = shopMenuColors();
             genericMenu(menuItems, `Color Shop`);
             break;
         case '2':
@@ -51,12 +34,34 @@ function shopMenu1(m) {
             shopMenuBot();
             break;
         case '4':
-            shopMenuFeatures();
+            menuItems = shopMenuFeatures();
+            genericMenu(menuItems, `Misc Shop`);
             break;
         default:
             say.reply(m.first(), 'error, wrong input');
             break;
     }
+}
+function shopMenuColors(){
+    var roles = omsg.guild.roles;
+    var menuItems = [];
+    function listMap(value, key, map) {
+        if (value.name.charAt(0) == '~') {
+            menuItems.push({
+                name: value.name, price: costOfColor, giveItem: () => {
+                    console.log(`${omsg.member.displayName} is buying a role`);
+                    if (omsg.member.roles.has(value.id)) {
+                        throw { name: 'alreadyHaveItException', message: 'you already have this role!' };
+                    } else {
+                        omsg.member.addRole(value.id);
+                        say.reply(omsg, `thank you for your purchase of ${value.name}`);
+                    }
+                }
+            });
+        }
+    }
+    roles.forEach(listMap);
+    return menuItems;
 }
 function shopMenuXP() {
 
@@ -65,21 +70,34 @@ function shopMenuBot() {
 
 }
 function shopMenuFeatures() {
-
+    var menuItems = [];
+    menuItems.push({
+        name: 'Change Color of Custom Role', price: {amount: 10, resource: 'money'}, giveItem: () => {
+            console.log(`${omsg.member.displayName} is changing color of role`);
+            custRole.changeColor(omsg);
+        }
+    });
+    menuItems.push({
+        name: 'Change Name of Custom Role', price: {amount: 20, resource: 'money'}, giveItem: () => {
+            console.log(`${omsg.member.displayName} is changing name of role`);
+            custRole.changeName(omsg);
+        }
+    });
+    return menuItems;
 }
 function genericMenu(menuItems, title) {
     var list = '\n';
     menuItems.forEach((item, number) => {
-        list = `${list}${number}. ${item.name}: ${item.price.amount} ${item.price.resource}\n`;
+        list = `${list}${number+1}. ${item.name}: ${item.price.amount} ${item.price.resource}\n`;
     });
     say.reply(omsg, `Welcome to the ${title} shop. Pick an option: ${list}`);
     waitForReply(genericBuy, menuItems);
 }
 function genericBuy(collected, menuItems) {
-    var toBuy = menuItems[parseInt(collected.first())];
+    var toBuy = menuItems[parseInt(collected.first())-1];
     buyItem(toBuy.price.amount, toBuy.price.resource).then((money) => {
         toBuy.giveItem();
-        console.log(`${omsg.author.name} has purchased ${toBuy.name} for ${toBuy.price.amount} ${toBuy.price.resource}s`);
+        console.log(`${omsg.author.username} has purchased ${toBuy.name} for ${toBuy.price.amount} ${toBuy.price.resource}s`);
         say.reply(omsg, `successfully purchased ${toBuy.name}`);
     }).catch((err) => {
         if(typeof err == 'undefined'){
@@ -103,6 +121,7 @@ function waitForReply(func, args) {
     }, { max: 1, time: 60000, errors: ['time'] })
         .then((collected) => func(collected, args))
         .catch(collected => { say.reply(omsg, `You did not respond in 1 minute. Please start again. ${JSON.stringify(collected)}`) });
+
 }
 function buyItem(cost, resource) {
     return new Promise((resolve, reject) => {
@@ -126,5 +145,6 @@ function buyItem(cost, resource) {
     });
 }
 
+exports.waitForReply = waitForReply;
 exports.desc = "shop menu."; // Export command description
 exports.syntax = ""; // Export command syntax
