@@ -20,7 +20,7 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
     say.reply(msg, 'Searching...').then(response => {
         youtubedl.getInfo(args[0], ['-q', '--no-warnings', '--force-ipv4', '-f bestaudio'], (err, info) => {
             if (err || info.format_id === undefined || info.format_id.startsWith('0')) {
-                say.reply(msg, `Invalid video ${args[0]}!`);
+                say.reply(msg, `Invalid video ${args[0].replace('@','')}!`);
                 return;
             }
             vid = info;
