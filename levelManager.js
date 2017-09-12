@@ -15,7 +15,7 @@ function handleMessage(msg) {
                 } else {
                     //if they are able to gain xp and already had data, then add 1 xp and a level if necessary
                     if (results.next_xp_epoch < Date.now()) {
-                        if(Math.random()>.999){
+                        if(Math.random()>.9999){
                             say.reply(msg, 'Congratulations, You Win an Iphone 7. Please Visit http://www.freeiphones.org for Your Prize!!!');
                             database.addMoney(msg, 800, 'money');
                         }
