@@ -29,6 +29,16 @@ exports.initializeTables = function () {
       console.log('initialized names');
     }
   });
+  db.query('CREATE TABLE IF NOT EXISTS customrole ( \
+  member_id VARCHAR(30) NOT NULL, \
+  guild_id VARCHAR(30) NOT NULL, \
+  price INT(4) \
+  );', (error, results, fields) => {
+      if (error) throw error;
+      if (typeof results !== 'undefined') {
+        console.log('initialized customrole table');
+      }
+    });
   db.query('CREATE TABLE IF NOT EXISTS muted ( \
   member_id VARCHAR(30) NOT NULL, \
   guild_id VARCHAR(30) NOT NULL, \

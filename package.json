@@ -26,11 +26,8 @@
     "url": "git+https://github.com/Darklight-03/robbot.git"
   },
   "keywords": [
-    "megumin.love",
     "discord.js",
-    "robbot",
     "bot",
-    "robflop",
     "discord",
     "node.js"
   ],
