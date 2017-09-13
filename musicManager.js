@@ -67,7 +67,13 @@ function play(obj, connection, bot) {
     queue[0] = new Object({song: obj.song, msg: obj.msg ,stream: connection.playStream(obj.song.url, { volume: .3 })});
     bot.user.setGame(obj.song.title);
     //when song ends, play next one
-    queue[0].stream.on('end', () => {
+    queue[0].stream.on('end', (reason) => {
+        say.reply(obj.msg, 'ended song, reason: '+ reason);
+        queue.shift();
+        playNext(bot);
+    });
+    queue[0].stream.on('error', (err) => {
+        say.reply(obj.msg, 'error: '+ err);
         queue.shift();
         playNext(bot);
     });
