@@ -16,6 +16,8 @@ var express = require('express')
 	, logger = require('morgan')
 	, app = express()
 	, router = express.Router();
+var githubhook = require('githubhook');
+var github = githubhook({port: config.websitePort, secret: 'fghgfghg'});
 
 function startWebsite() {
 	app.use(bodyParser.json());
@@ -159,6 +161,12 @@ if (cluster.isWorker) {
 			console.log(err.toString());
 		}
 	}, 30000);
+
+	github.listen();
+	
+	github.on('*', function (event, repo, ref, data) {
+		console.log('test complete!');
+	});
 
 	bot.on('message', msg => { // Listen to all messages sent
 		if (msg.author.bot) {

@@ -13,6 +13,7 @@ ignores
 # ignore serverconfigs
 serverconf
 config.json
+package-lock.json
 
 # ignore vscode files
 .vscode
