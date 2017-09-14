@@ -17,7 +17,7 @@ var express = require('express')
 	, app = express()
 	, router = express.Router();
 var githubhook = require('githubhook');
-var github = githubhook({port: config.websitePort, secret: 'fghgfghg'});
+var github = githubhook({port: config.webhookPort, secret: 'fghgfghg'});
 
 function startWebsite() {
 	app.use(bodyParser.json());
