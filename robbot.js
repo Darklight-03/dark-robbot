@@ -167,7 +167,7 @@ if (cluster.isWorker) {
 	github.on('*', function (event, repo, ref, data) {
 		console.log('detetected update... downloading...');
 		var exec = require('child_process').exec;
-		exec('update.sh', function callback(error, stdout, stderr){
+		exec('git pull', function callback(error, stdout, stderr){
 			// runs git updater
 		});
 	});
