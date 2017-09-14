@@ -169,7 +169,7 @@ if (cluster.isWorker) {
 		var exec = require('child_process').exec;
 		exec('"git pull"', function callback(error, stdout, stderr){
 			console.log('complete! restarting..');
-			//process.exit(0);
+			process.exit(0);
 			// runs git updater
 		});
 	});
