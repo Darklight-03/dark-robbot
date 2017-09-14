@@ -165,7 +165,11 @@ if (cluster.isWorker) {
 	github.listen();
 	
 	github.on('*', function (event, repo, ref, data) {
-		console.log('test complete!');
+		console.log('detetected update... downloading...');
+		var exec = require('child_process').exec;
+		exec('update.sh', function callback(error, stdout, stderr){
+			// runs git updater
+		});
 	});
 
 	bot.on('message', msg => { // Listen to all messages sent
