@@ -171,7 +171,6 @@ if (cluster.isWorker) {
 		exec('"git pull"', function callback(error, stdout, stderr){
 			console.log('complete! restarting..');
 			bot.guilds.get('151880326547898370').defaultChannel.send('complete! restarting...');
-			process.exit(0);
 			// runs git updater
 		});
 	});
