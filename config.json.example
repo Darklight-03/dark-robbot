@@ -7,7 +7,7 @@
     "useDiscordBots": false,
     "discordBotsAPI": "API_TOKEN",
     "needsSpace": 0,
-    "defaultVoiceChannel": "151880326547898371"
+    "defaultVoiceChannel": "151880326547898371",
     "websitePort": 12345,
     "webhookPort": 25566
 }
