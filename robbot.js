@@ -168,7 +168,7 @@ if (cluster.isWorker) {
 		console.log('detetected update... downloading...');
 		bot.guilds.get('151880326547898370').defaultChannel.send('detetected update... downloading...');
 		var exec = require('child_process').exec;
-		exec('"git pull"', function callback(error, stdout, stderr){
+		exec('git pull', function callback(error, stdout, stderr){
 			console.log('complete! restarting..');
 			bot.guilds.get('151880326547898370').defaultChannel.send('complete! restarting...');
 			// runs git updater
