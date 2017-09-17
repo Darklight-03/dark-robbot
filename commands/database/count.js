@@ -22,32 +22,40 @@ exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export
 	}
 	//get all messages in the channel
 	channelUtils.getAllMessages(msg.channel).then((messages) => {
-		arr = [];
-		obj = {};
+		var arr = [];
+		var obj = {};
 		//for each message, run regex check and count them
 		messages.forEach((messagee) => {
-			m = messagee.msg_content;
+			var m = messagee.msg_content;
 			let re = new RegExp(args, 'gi');
-			b = m.match(re);
+			var b = m.match(re);
 			if (!(!b)) {
 				//add the amount of occurrances in the message to the array
 				r = r + (b.length);
 				for(i = 0;i<b.length;i++){
-					arr.push(msg.guild.fetchMember(messagee.msg_author_id));
+					arr.push(bot.fetchUser(messagee.msg_author_id));
 				}
 			}
 		});
 		//reply results.
-		Promise.all(arr).then((values)=>{
-			console.log(values[0].user.username);
-			values.forEach((arr)=>{
-				if(!obj[arr.user.username]){
-					obj[arr.user.username]=0;
-				}
-				++obj[arr.user.username];
+		Promise.all(arr).then((arr2)=>{
+			arr2.forEach((el)=>{
+				var arr = [];
+				arr.push(msg.guild.fetchMember(el));
 			});
-			say.reply(msg, `found ${r} occurances of ${args}\n\n${JSON.stringify(obj)}`);
+			Promise.all(arr).then((values)=>{
+				console.log(values[0].username);
+				values.forEach((arr)=>{
+					if(!obj[arr.username]){
+						obj[arr.username]=0;
+					}
+					++obj[arr.username];
+				});
+				say.reply(msg, `found ${r} occurances of ${args}\n\n${JSON.stringify(obj)}`);
+			});
 		});
+		// Promise.all(arr).then((values)=>{
+		// });	
 	});
 };
 
