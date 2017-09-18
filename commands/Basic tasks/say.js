@@ -17,7 +17,7 @@ exports.reply = function (msg, content) {
 reply = function (msg, content) {
     var prom = new Promise((resolve, reject) => {
         if (String(content).length > 2000) {
-            msg.reply(String(content).slice(0, 2000)).then((message) => {
+            msg.reply(String(content).slice(0, 2000).replace('@',' ')).then((message) => {
                 setTimeout(() => {
                     message.delete();
                     msg.delete();
