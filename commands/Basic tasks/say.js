@@ -25,7 +25,7 @@ reply = function (msg, content) {
             });
             return reply(msg, String(content).slice(2000, String(content).length));
         }
-        msg.reply(String(content)).then((message) => {
+        msg.reply(String(content).replace('@',' ')).then((message) => {
             resolve(message);
             setTimeout(() => {
                 message.delete();
