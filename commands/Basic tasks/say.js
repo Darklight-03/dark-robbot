@@ -17,7 +17,7 @@ exports.reply = function (msg, content) {
 reply = function (msg, content) {
     var prom = new Promise((resolve, reject) => {
         if (String(content).length > 2000) {
-            msg.reply(String(content).slice(0, 2000).replace('@',' ')).then((message) => {
+            msg.reply(String(content).slice(0, 2000).replace('@everyone','everyone').replace('@here', 'here')).then((message) => {
                 setTimeout(() => {
                     message.delete();
                     msg.delete();
@@ -25,7 +25,7 @@ reply = function (msg, content) {
             });
             return reply(msg, String(content).slice(2000, String(content).length));
         }
-        msg.reply(String(content).replace('@',' ')).then((message) => {
+        msg.reply(String(content).replace('@everyone','everyone').replace('@here', 'here')).then((message) => {
             resolve(message);
             setTimeout(() => {
                 message.delete();
