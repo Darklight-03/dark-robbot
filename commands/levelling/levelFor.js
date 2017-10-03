@@ -8,7 +8,7 @@ const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
 
 exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
-    say.reply(msg,`the xp needed (total) for level ${args[1]} is ${levelManager.nextLevel(args[1])} xp`)
+    say.reply(msg,`the xp needed (total) for level ${args[0]} is ${levelManager.nextLevel(args[0])} xp`)
 };
 
 
