@@ -1,0 +1,40 @@
+{
+    "itemnames":[
+        "$ # of $",
+        "$'s #",
+        "$",
+        "$'s $",
+        "$ in a $",
+        "$ from $",
+        "$ # from $",
+        "$'s $ # from $",
+        "$'s # from $",
+        "$$",
+        "$ #",
+        "# with $",
+        "#"
+    ],
+    "itemtypes":[
+        "crossbow",
+        "bow",
+        "sword",
+        "greatsword",
+        "hammer",
+        "axe",
+        "rifle",
+        "pistol",
+        "katana",
+
+        "shield",
+
+        "ring",
+        "amulet",
+
+        "helm",
+        "chestplate",
+        "leggings",
+        "pants",
+        "boots",
+        "gloves"
+    ]
+}

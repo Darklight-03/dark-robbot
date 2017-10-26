@@ -48,3 +48,15 @@ exports.getAllMessages = function getAllMessages(channel) {
     });
 }
 
+exports.getAllAllMessages = function getAllAllMessages() {
+    return new Promise((resolve, reject)=>{
+        var arr = [];
+        database.getMessages().then((results) => {
+            results.forEach((result) => {
+                arr.push(result);
+            });
+            resolve(arr);
+        });
+    });
+}
+
