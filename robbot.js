@@ -125,7 +125,7 @@ if (cluster.isWorker) {
 	setInterval(() => {
 		try {
 			//checks muted list to see if anyone needs to be unmuted		
-			database.getMuted('epoch_unmute').then((result) => {
+			database.getMuted('epoch_unmute').then((result) => { //TODO Object this
 				times = result;
 				database.getMuted('member_id').then((result) => {
 					ppls = result;

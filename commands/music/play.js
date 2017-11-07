@@ -14,24 +14,38 @@ exports.main = function (bot, message, timeout, botPerm, userPerm, args) { // Ex
     if (!args[0]) {
         return;
     }
-    search = args.join(' ');
-    if (!search.toLowerCase().startsWith('http')) {
-        var srch = search;
-        search = 'gvsearch1:' + search;
+    var searchtext = '';
+    var arguments = [];
+    args.forEach((value, index)=>{
+        if(!(value.charAt(0)=='-')){
+            searchtext = searchtext + ' ' + value;
+            console.log(searchtext);
+        }
+        else{
+            arguments.push(value);
+        }
+    });
+    searchtext = searchtext.trim();
+    console.log(`final: ${searchtext}, ${arguments}`);
+    if (!searchtext.toLowerCase().startsWith('http')) {
+        var gvsearch = 'gvsearch1:'+searchtext;
         var vid;
-        say.reply(msg, `Searching google for ${srch.replace('@', '')}...`).then(response => {
-            youtubedl.getInfo(search, ['-q', '--no-warnings', '--force-ipv4', '-f bestaudio'], (err, info) => {
+        say.reply(msg, `Searching google for ${searchtext.replace('@', '')}...`).then(response => {
+            youtubedl.getInfo(gvsearch, ['-q', '--no-warnings', '--force-ipv4', '-f bestaudio'], (err, info) => {
                 if (err || info.format_id === undefined || info.format_id.startsWith('0')) {
-                    say.reply(msg, `Invalid video ${search.replace('@', '')}!\n${err}`);
+                    say.reply(msg, `Invalid video ${gvsearch.replace('@', '')}!\n${err}`);
                     return;
                 }
                 vid = info;
                 say.reply(msg, `found ${vid.title}`);
+                if(arguments.includes('-debug')){
+                    console.log( `vid object: \n ${JSON.stringify(vid,null,4)}`);
+                }
                 queueUrl(vid.webpage_url, msg, bot);
             });
         });
     } else {
-        queueUrl(search, msg, bot);
+        queueUrl(searchtext, msg, bot);
     }
 };
 function queueUrl(url, msg, bot) {
@@ -48,7 +62,14 @@ function queueUrl(url, msg, bot) {
                 return;
             }
             purl = info.formats.find(function (format) {
-                return format.type.includes('audio');
+                if(format.type){
+                    return format.type.includes('audio');
+                }else if(format.format){
+                    return format.format.includes('audio');
+                }else{
+                    say.reply(msg,'no format found...');
+                }
+               
             });
             
             say.reply(msg, `added ${info.title} to queue, ${purl.url}`).then(()=>{
