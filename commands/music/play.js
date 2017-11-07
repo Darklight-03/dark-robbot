@@ -7,26 +7,26 @@ const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const ytdl = require('ytdl-core');
 const youtubedl = require('youtube-dl');
-
+var PastebinAPI = require('pastebin-js');
+    pastebin = new PastebinAPI(config.pastebinapikey);
 var msg;
 exports.main = function (bot, message, timeout, botPerm, userPerm, args) { // Export command function
     msg = message;
     if (!args[0]) {
         return;
     }
-    var searchtext = '';
     var arguments = [];
+    var searchtext = '';
     args.forEach((value, index)=>{
         if(!(value.charAt(0)=='-')){
             searchtext = searchtext + ' ' + value;
-            console.log(searchtext);
         }
         else{
             arguments.push(value);
         }
     });
     searchtext = searchtext.trim();
-    console.log(`final: ${searchtext}, ${arguments}`);
+    console.log(`play: ${searchtext}, ${arguments}`);
     if (!searchtext.toLowerCase().startsWith('http')) {
         var gvsearch = 'gvsearch1:'+searchtext;
         var vid;
@@ -38,20 +38,16 @@ exports.main = function (bot, message, timeout, botPerm, userPerm, args) { // Ex
                 }
                 vid = info;
                 say.reply(msg, `found ${vid.title}`);
-                if(arguments.includes('-debug')){
-                    console.log( `vid object: \n ${JSON.stringify(vid,null,4)}`);
-                }
-                queueUrl(vid.webpage_url, msg, bot);
+                queueUrl(vid.webpage_url, msg, bot, arguments);
             });
         });
     } else {
-        queueUrl(searchtext, msg, bot);
+        queueUrl(searchtext, msg, bot,arguments);
     }
 };
-function queueUrl(url, msg, bot) {
+function queueUrl(url, msg, bot, argss) {
     var vid;
-    say.reply(msg, 'Searching...').then(response => {
-        
+    say.reply(msg, 'Searching...').then(response => {        
         ytdl.getInfo(url, {}, function (err,info){
             if (err) {
                 say.reply(msg, `Invalid video ${url.replace('@', '')}!\\${err}`);
@@ -61,25 +57,18 @@ function queueUrl(url, msg, bot) {
                 console.log(info.format_id);
                 return;
             }
-            purl = info.formats.find(function (format) {
-                if(format.type){
-                    return format.type.includes('audio');
-                }else if(format.format){
-                    return format.format.includes('audio');
-                }else{
-                    say.reply(msg,'no format found...');
-                }
-               
-            });
-            
-            say.reply(msg, `added ${info.title} to queue, ${purl.url}`).then(()=>{
-                const soong = ytdl(url, {retries: 25, filter: (format) => !format.bitrate && format.audioEncoding === 'opus' }).on('error', err => console.log(err));
+            if(argss.includes('-debug')){
+                pastebin.createPaste( `vid object: \n ${JSON.stringify(info.formats,null,4)}`).then((data)=>{
+                    say.reply(msg,`${data}`);
+                });
+            }            
+            say.reply(msg, `added ${info.title} to queue, ${url}`).then(()=>{
+                const soong = ytdl(url, {retries: 25, filter: 'audioonly'}).on('error', err => console.log(err));
                 var vid = { url: soong, title: info.title };
                 musicManager.addQueue(vid, msg, bot);
             });
-            
-        });
-        
+
+        });        
         
     });
 }
