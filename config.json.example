@@ -9,5 +9,6 @@
     "needsSpace": 0,
     "defaultVoiceChannel": "151880326547898371",
     "websitePort": 12345,
-    "webhookPort": 25566
+    "webhookPort": 25566,
+    "pastebinapikey": "pastebin api key goes here"
 }
