@@ -70,7 +70,7 @@ if (cluster.isWorker) {
 	bot.once('ready', () => { // Ready message once bot is loaded
 		Events.ready(bot);
 		database.countMessages().then((num) => {
-			bot.user.setGame(`${num} messages in database`);
+			bot.user.setPresence({ game: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 2 } });
 		});
 		startWebsite();
 	});
@@ -85,6 +85,11 @@ if (cluster.isWorker) {
 
 	bot.on('guildDelete', guild => { // Listen to leaves
 		Events.leave(bot, guild);
+	});
+	//TODO WIP
+	bot.on('messageReactionAdd', (messageReaction, user)=>{
+		//console.log('reactadd');
+		Events.reaction(messageReaction, user);
 	});
 
 	var timeout = {
@@ -118,7 +123,7 @@ if (cluster.isWorker) {
 		// let n = Math.floor(Math.random() * (playableGames.games.length - 0));
 		// bot.user.setGame(playableGames.games[n]);
 		database.countMessages().then((num) => {
-			bot.user.setGame(`${num} messages in database`);
+			bot.user.setPresence({ game: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 2 } });
 		});
 	}, 60 * 1000); // Repeats every 60 seconds, which is already faster than necessary
 

@@ -6,16 +6,21 @@ const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
+const Command = require('../../Command.js');
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
-    database.currentLevelData(msg).then((data)=>{
-        database.position(msg).then((place)=>{
-            say.reply(msg,`You are currently level ${data.level}, and need ${levelManager.nextLevel(data.level)-data.xp} more spamming \
+class level extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+        database.currentLevelData(msg).then((data)=>{
+            database.position(msg).then((place)=>{
+                say.reply(msg,`You are currently level ${data.level}, and need ${levelManager.nextLevel(data.level)-data.xp} more spamming \
 to get demoted again, putting you at the #${place} position`)
+            });
         });
-    });
-};
+    }
+}
 
-
-exports.desc = "skip song on music"; // Export command description
-exports.syntax = ""; // Export command syntax
+module.exports = level;

@@ -1,5 +1,5 @@
 const say = require('./commands/Basic tasks/say.js');
-
+const ytdl = require('youtube-dl');
 var queue = [];
 
 function nowPlaying(msg){
@@ -56,6 +56,7 @@ function playNext(bot) {
         let channel = obj.msg.guild.channels.find('name','Music')
         if (channel.type == 'voice') {
             channel.join().then(connection => {
+                console.log(obj);
                 //play next thing in queue
                 play(obj,connection,bot);
             });
@@ -64,8 +65,9 @@ function playNext(bot) {
 }
 
 function play(obj, connection, bot) {
-    queue[0] = new Object({song: obj.song, msg: obj.msg ,stream: connection.playStream(obj.song.url, { volume: .3 })});
-    bot.user.setGame(obj.song.title);
+    var streamdispatcher = connection.play(ytdl(obj.song.url), { volume: .3 })
+    queue[0] = new Object({song: obj.song, msg: obj.msg ,stream: streamdispatcher});
+    //bot.user.setGame(obj.song.title);
     //when song ends, play next one
     queue[0].stream.on('end', (reason) => {
         say.reply(obj.msg, 'ended song, reason: '+ reason);
@@ -77,7 +79,7 @@ function play(obj, connection, bot) {
         queue.shift();
         playNext(bot);
     });
-    say.reply(obj.msg, 'Now playing ' + obj.song.title);
+    say.reply(obj.msg, `Now playing ${obj.song.title}`);
 }
 
 exports.addQueue = addQueue;

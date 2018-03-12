@@ -1,15 +1,28 @@
 const say = require('./Basic tasks/say.js');
 const Discord = require('discord.js');
+const Command = require('../Command.js');
 
-exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command's function
-    if(!args[0]){
-        console.log('noargs')
-        msg.channel.fetchMessages({limit: 1, before: msg.id}).then(sendQuote);
-    }else{
-        console.log('args')
-        msg.channel.fetchMessage(args[0]).then(sendQuote);
+class quote extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
     }
-    function sendQuote(retrieved){
+    exec(bot,msg,args,params){
+        if(!args[0]){
+            console.log('noargs')
+            msg.channel.fetchMessages({limit: 1, before: msg.id}).then(sendQuote);
+        }else{
+            if(args[0].match(/^[0-9]+$/)!=null){
+                console.log('snowflake')
+                msg.channel.fetchMessage(args[0]).then(this.sendQuote);
+            }
+            else{
+                console.log('quote');
+                //sendQuote(new Object({cleanContent: args, author: {username: }}));
+            }
+        }
+    }
+    sendQuote(retrieved){
         try{
             retrieved = retrieved.first();
         }catch(exception){
@@ -49,6 +62,11 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export 
         }).first().send({embed});
         retrieved.author.send(`You have been quoted in ${msg.guild}.`);
     }
+}
+
+module.exports = quote;
+exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command's function
+    
 };
 
 exports.desc = "quote"; // Export command description

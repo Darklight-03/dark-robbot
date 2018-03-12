@@ -6,15 +6,20 @@ const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
+const Command = require('../../Command.js');
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
-    database.getMoney(msg).then((data)=>{
-        say.reply(msg,`You have ${data.money} shitcoins, and ${data.gems} gems`);
-    }).catch(()=>{
-        say.reply(msg,`You have ${0} shitcoins, and ${0} gems`);
-    });
-};
+class shitcoins extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+        database.getMoney(msg).then((data)=>{
+            say.reply(msg,`You have ${data.money} shitcoins, and ${data.gems} gems`);
+        }).catch(()=>{
+            say.reply(msg,`You have ${0} shitcoins, and ${0} gems`);
+        });
+    }
+}
 
-
-exports.desc = "skip song on music"; // Export command description
-exports.syntax = ""; // Export command syntax
+module.exports = shitcoins;

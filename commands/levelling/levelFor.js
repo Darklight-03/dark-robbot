@@ -6,11 +6,16 @@ const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
+const Command = require('../../Command.js');
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
-    say.reply(msg,`the xp needed (total) for level ${args[0]} is ${levelManager.nextLevel(args[0])} xp`)
-};
+class levelFor extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+        say.reply(msg,`the xp needed (total) for level ${args[0]} is ${levelManager.nextLevel(args[0])} xp`)
+    }
+}
 
-
-exports.desc = "skip song on music"; // Export command description
-exports.syntax = ""; // Export command syntax
+module.exports = levelFor;

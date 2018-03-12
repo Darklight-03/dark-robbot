@@ -1,13 +1,22 @@
 const say = require('../Basic tasks/say.js');
 const channelUtils = require('../Basic tasks/channelUtils.js');
 var database = require('../../database.js');
+const Command = require('../../Command.js');
 
-exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
-	if (!msg.member.hasPermission("KICK_MEMBERS")) {
-				say.reply(msg,"U R NOT A MODERATOR");
-                return;
+class updateMessageDatabase extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
     }
-    function addChannel(channel, channelarray){
+    exec(bot,msg,args,params){
+        if (!msg.member.hasPermission("KICK_MEMBERS")) {
+            say.reply(msg,"U R NOT A MODERATOR");
+            return;
+        }
+        var channelarray = msg.guild.channels.array();
+        this.addChannel(channelarray.shift(), channelarray);
+    }
+    addChannel(channel, channelarray){
         if(channel.type=='text'){
             channelUtils.getAllMessagesDisc(channel).then(arr => {
                 arr.forEach((message)=>{
@@ -32,9 +41,6 @@ exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export comman
             }
         }
     }
-    var channelarray = msg.guild.channels.array();
-    addChannel(channelarray.shift(), channelarray);
-};
+}
 
-exports.desc = "update the database for messages from all channels"; // Export command description
-exports.syntax = "updateMessageDatabase"; // Export command syntax
+module.exports = updateMessageDatabase;

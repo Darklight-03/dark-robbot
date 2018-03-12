@@ -32,7 +32,7 @@ exports.initializeTables = function () {
   db.query('CREATE TABLE IF NOT EXISTS customrole ( \
   member_id VARCHAR(30) NOT NULL, \
   guild_id VARCHAR(30) NOT NULL, \
-  price INT(4) \
+  price INT(5) \
   );', (error, results, fields) => {
       if (error) throw error;
       if (typeof results !== 'undefined') {
@@ -90,6 +90,15 @@ exports.initializeTables = function () {
       }
     });
 };
+//TODO WIP
+exports.getCustRoleInfo = function ( ){
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM customrole;', (error, results, fields) => {
+      if (error) throw error;
+      resolve(results[0]);
+    });
+  });
+}
 /**
 * @param {String} resource - money, gems, any other column in resources db
 * @param {Integer} amount - how much to remove

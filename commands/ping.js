@@ -1,13 +1,19 @@
 const say = require('./Basic tasks/say.js');
+const Command = require('../Command.js');
 
-exports.main = function(bot, msg, timeout, botPerm, userPerm) { // Export command's function
-	var time = Date.now();
-	say.reply(msg,'pinging...').then((message)=>{
-		var diff = Date.now()
-		diff = diff-time;
-		message.edit(`Took ${diff} ms!`);
-	});
-};
+class ping extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+		var time = Date.now();
+		say.reply(msg,'pinging...').then((message)=>{
+			var diff = Date.now()
+			diff = diff-time;
+			message.edit(`Took ${diff} ms!`);
+		});
+    }
+}
 
-exports.desc = "coffee"; // Export command description
-exports.syntax = "coffee"; // Export command syntax
+module.exports = ping;

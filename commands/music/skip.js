@@ -5,14 +5,16 @@ const prism = require('prism-media'); // Prism for smoother file playing of very
 const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
+const Command = require('../../Command.js');
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
+class skip extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+        musicManager.skip(bot);
+    }
+}
 
-
-
-    musicManager.skip(bot);
-};
-
-
-exports.desc = "skip song on music"; // Export command description
-exports.syntax = ""; // Export command syntax
+module.exports = skip;

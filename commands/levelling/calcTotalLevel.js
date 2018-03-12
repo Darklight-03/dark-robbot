@@ -6,31 +6,30 @@ const database = require('../../database.js');
 const say = require('../Basic tasks/say.js');
 const musicManager = require('../../musicManager.js');
 const levelManager = require('../../levelManager.js');
+var Command = require('../../Command.js');
 
-exports.main = function (bot, msg, timeout, botPerm, userPerm, args) { // Export command function
-    var xp = 0;
-    var level = 9999;
-    database.getMessages().then((messages) => {
-        console.log('started');
-        messages.forEach((message, i) => {
-            console.log('dong');
-            if (message.msg_author_id == msg.author.id) {
-                xp++;
-
-                console.log('doing');
-
-            }
-            if (i == messages.length - 1) {
-                console.log('done');
-                while (levelManager.nextLevel(level) < xp) {
-                    level--;
+class calcTotalLevel extends Command{
+    constructor(bot, msg, timeout, botPerm, userPerm, args){
+        super(msg);
+        this.exec(bot,msg,super.args(args),super.params(args));
+    }
+    exec(bot,msg,args,params){
+        var xp = 0;
+        var level = 9999;
+        database.getMessages().then((messages) => {
+            messages.forEach((message, i) => {
+                if (message.msg_author_id == msg.author.id) {
+                    xp++;
                 }
-                say.reply(msg, `You would be level ${level} with ${xp}`);
-            }
+                if (i == messages.length - 1) {
+                    while (levelManager.nextLevel(level) < xp) {
+                        level--;
+                    }
+                    say.reply(msg, `You would be level ${level} with ${xp}`);
+                }
+            });
         });
-    });
-};
+    }
+}
 
-
-exports.desc = "skip song on music"; // Export command description
-exports.syntax = ""; // Export command syntax
+module.exports = calcTotalLevel;
