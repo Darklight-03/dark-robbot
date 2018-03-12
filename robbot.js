@@ -69,10 +69,13 @@ if (cluster.isWorker) {
 	});
 	bot.once('ready', () => { // Ready message once bot is loaded
 		Events.ready(bot);
-		database.countMessages().then((num) => {
-			bot.user.setPresence({ game: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 2 } });
-		});
+		bot.user.setPresence({ activity: { name: `you`, url: 'http://testdnsplsignore.ddns.net:12345', type: "WATCHING" } });
 		startWebsite();
+		// setInterval(function () {
+		// 	database.countMessages().then((num) => {
+		// 		bot.user.setPresence({ activity: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: "WATCHING" } });
+		// 	});
+		// }, 60 * 1000);
 	});
 
 	bot.on('error', () => { // Listen to errors
@@ -119,13 +122,11 @@ if (cluster.isWorker) {
 	};
 
 	//change game bot is playing. TODO use to show song playing instead :D
-	setInterval(function () {
-		// let n = Math.floor(Math.random() * (playableGames.games.length - 0));
-		// bot.user.setGame(playableGames.games[n]);
-		database.countMessages().then((num) => {
-			bot.user.setPresence({ game: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 2 } });
-		});
-	}, 60 * 1000); // Repeats every 60 seconds, which is already faster than necessary
+	// setInterval(function () {
+	// 	database.countMessages().then((num) => {
+	// 		bot.user.setPresence({ activity: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 3 } });
+	// 	});
+	// }, 60 * 1000); // Repeats every 60 seconds, which is already faster than necessary
 
 	setInterval(() => {
 		try {

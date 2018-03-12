@@ -43,6 +43,7 @@ function playNext(bot) {
         bot.voiceConnections.forEach((con) => {
             con.disconnect();
         });
+        bot.user.setActivity("you", {url: 'http://testdnsplsignore.ddns.net:12345', type: "WATCHING" });
         return;
     }
     //otherwise join channel
@@ -66,6 +67,7 @@ function playNext(bot) {
 
 function play(obj, connection, bot) {
     var streamdispatcher = connection.play(ytdl(obj.song.url), { volume: .3 })
+    bot.user.setActivity(obj.song.title, {url: obj.song.url, type: "LISTENING" });
     queue[0] = new Object({song: obj.song, msg: obj.msg ,stream: streamdispatcher});
     //bot.user.setGame(obj.song.title);
     //when song ends, play next one
