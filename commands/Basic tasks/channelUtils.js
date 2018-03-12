@@ -6,7 +6,7 @@ exports.getAllMessagesDisc = function getAllMessages(channel) {
         var arr = [];
         function getMessagesBef(msgid) {
             console.log('finding next 100');
-            channel.fetchMessages({ limit: 100, before: msgid }).then(messages => {
+            channel.messages.fetch({ limit: 100, before: msgid }).then(messages => {
                 console.log(`Received ${messages.size} messages`);
                 messages.forEach((messagee) => {
                     arr.push(messagee);
