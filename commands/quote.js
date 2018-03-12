@@ -10,11 +10,11 @@ class quote extends Command{
     exec(bot,msg,args,params){
         if(!args[0]){
             console.log('noargs')
-            msg.channel.fetchMessages({limit: 1, before: msg.id}).then(sendQuote);
+            msg.channel.messages.fetch({limit: 1, before: msg.id}).then(re => this.sendQuote(re,msg));
         }else{
             if(args[0].match(/^[0-9]+$/)!=null){
                 console.log('snowflake')
-                msg.channel.fetchMessage(args[0]).then(this.sendQuote);
+                msg.channel.fetchMessage(args[0]).then(re => this.sendQuote(re,msg));
             }
             else{
                 console.log('quote');
@@ -22,12 +22,12 @@ class quote extends Command{
             }
         }
     }
-    sendQuote(retrieved){
+    sendQuote(retrieved,msg){
         try{
             retrieved = retrieved.first();
         }catch(exception){
         }
-        const embed = new Discord.RichEmbed()
+        const embed = new Discord.MessageEmbed()
         //.setAuthor(`Quoted by ${msg.author.username}`)
         /*
         * Alternatively, use '#00AE86', [0, 174, 134] or an integer number.
@@ -65,9 +65,3 @@ class quote extends Command{
 }
 
 module.exports = quote;
-exports.main = function(bot, msg, timeout, botPerm, userPerm, args) { // Export command's function
-    
-};
-
-exports.desc = "quote"; // Export command description
-exports.syntax = "quote"; // Export command syntax
