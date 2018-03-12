@@ -13,11 +13,10 @@ class moveall extends Command{
         }
         else{
             let server = msg.guild;
-            let channeltarget = config.defaultVoiceChannel;
+            let channeltarget = msg.member.voiceChannel;
             if(!(!args[0])){
                 if(args[0]!='undefined'){
                     channeltarget = args[0];
-                    console.log(args[0]);
                 }
             }
             let s='';
