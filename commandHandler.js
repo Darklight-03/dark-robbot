@@ -1,5 +1,6 @@
 const config = require('./config.json'); // Import configuration
 const Command = require('./Command.js');
+const say = require('./commands/Basic tasks/say.js')
 
 /**
 	Replace (cut out) bot prefix, cut out whitespaces at start and end, split prefix, command
@@ -26,7 +27,13 @@ exports.runCommand = function (bot, msg, timeout, commands) {
 	if (Object.keys(commands).indexOf(command) > -1) {
 		console.log(`${msg} yp\n`)
 		const comclass = commands[command];
-		const c = new comclass(bot, msg, timeout, botPerm, userPerm, argsfinal);
+		try{
+			const c = new comclass(bot, msg, timeout, botPerm, userPerm, argsfinal);
+		}
+		catch(e){
+			console.log(`error occurred in ${command}: ${e.message}`);
+			say.reply(msg,`error occurred in ${command}: ${e.message}`);
+		}
 		// If the given command is an actual command that is available...
 		// commands[command].exec(bot, msg, timeout, botPerm, userPerm, argsfinal);
 		setTimeout(() => {
