@@ -12,6 +12,24 @@ getBotsInGuild = function getBotsInGuild(guild) {
 }
 
 /**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ * from stackexchange
+ * @param {array} array array to be shuffled
+ */
+shuffleArray = function shuffleArray(array) {
+    return new Promise((resolve,reject)=>{
+        for (var i = array.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        }
+        resolve(array);
+    })
+}
+
+/**
  * @param {boolean} includeBots give false to exclude bot messages
  * @param {guild} guild guild to exclude bots from if applicable, and sort only messages from this guild if applicable
  * @param {function} messageFilter function that takes message and returns true if it should be included
@@ -108,3 +126,4 @@ exports.sortedNumOcurrancesArr = sortedNumOcurrancesArr;
 exports.numOccurrancesArr = numOccurrancesArr;
 exports.getAllWords = getAllWords;
 exports.getBotsInGuild = getBotsInGuild;
+exports.shuffleArray = shuffleArray;

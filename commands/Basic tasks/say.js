@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 exports.pm = function (author, content) {
     pm(author, content);
 };
@@ -33,6 +35,24 @@ reply = function (msg, content) {
                 }, 1000 * 60 * 3);
             });
         }
+    });
+
+    return prom
+};
+
+exports.embed = function (msg, content) {
+    return embed(msg, content);
+};
+
+embed = function (msg, content) {
+    var prom = new Promise((resolve, reject) => {
+
+        msg.channel.send(undefined,{split: true, disableEveryone: true, embed: content}).then((message) => {
+            resolve(message);
+            setTimeout(() => {
+                message.delete();
+            }, 1000 * 60 * 3);
+        });
     });
 
     return prom
