@@ -24,7 +24,7 @@ class CommandName extends Command{
 					say.reply(msg,"U R NOT A MODERATOR");
 				} else {
 					if (mutee.roles.has(muted)) {
-						mutee.removeRole(muted);
+						mutee.role.remove(muted);
 						database.removeMuted(mutee.id,msg.guild.id);
 						say.reply(msg,"UNMUTED " + mutee.toString());
 					} else {

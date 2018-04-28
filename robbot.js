@@ -89,7 +89,7 @@ if (cluster.isWorker) {
 	bot.on('guildDelete', guild => { // Listen to leaves
 		Events.leave(bot, guild);
 	});
-	//TODO WIP
+	//TODO: WIP
 	bot.on('messageReactionAdd', (messageReaction, user)=>{
 		//console.log('reactadd');
 		Events.reaction(messageReaction, user);
@@ -121,7 +121,7 @@ if (cluster.isWorker) {
 		}
 	};
 
-	//change game bot is playing. TODO use to show song playing instead :D
+	//change game bot is playing. TODO: use to show song playing instead :D
 	// setInterval(function () {
 	// 	database.countMessages().then((num) => {
 	// 		bot.user.setPresence({ activity: { name: `${num} messages in database`, url: 'http://testdnsplsignore.ddns.net:12345', type: 3 } });
@@ -131,7 +131,7 @@ if (cluster.isWorker) {
 	setInterval(() => {
 		try {
 			//checks muted list to see if anyone needs to be unmuted		
-			database.getMuted('epoch_unmute').then((result) => { //TODO Object this
+			database.getMuted('epoch_unmute').then((result) => { //TODO: Object this
 				times = result;
 				database.getMuted('member_id').then((result) => {
 					ppls = result;
@@ -149,8 +149,8 @@ if (cluster.isWorker) {
 							if (mutee.roles.has(muted)) {
 								if (timeUnmute < Date.now()) {
 
-									mutee.removeRole(muted);
-									guild.defaultChannel.send(mutee + ' you have been unmuted!');
+									mutee.roles.remove(muted);
+									guild.channels.find(name,'general').send(mutee + ' you have been unmuted!');
 									database.removeMuted(mutee.id, guild.id);
 								}
 							}

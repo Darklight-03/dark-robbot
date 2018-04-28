@@ -13,9 +13,9 @@ class mute extends Command{
     }
     exec(bot,msg,args,params){
 		if (typeof msg.mentions.users.first() !== 'undefined') {
-			time  =  parseInt(args[1].substring(0,args[1].length-1));;
-			type=  args[1].charAt(args[1].length-1);
-
+			let time  =  parseInt(args[1].substring(0,args[1].length-1));
+			let type=  args[1].charAt(args[1].length-1);
+			let typehuman;
 			let lengthMute;
 			if (type == 'm') {
 				lengthMute = time * 1000 * 60;
@@ -45,8 +45,8 @@ class mute extends Command{
 						say.reply(msg, "that user is already muted");
 					} else {
 						//mute them.
-						mutee.addRole(muted);
-						msg.guild.createChannel('temp', 'voice').then(channel => {
+						mutee.roles.add(muted);
+						msg.guild.channels.create('temp', 'voice').then(channel => {
 							mutee.setVoiceChannel(channel).then(member => {
 								channel.delete();
 							});

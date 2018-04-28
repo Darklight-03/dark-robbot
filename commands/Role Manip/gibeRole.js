@@ -28,7 +28,7 @@ class gibeRole extends Command{
 			if (!validroles.includes(role.name)) {
 				throw exception;
 			}
-			msg.member.addRole(role);
+			msg.member.role.add(role);
 			say.reply(msg,"role added");
 		} catch (err) {
 			say.reply(msg,"failed to add role (maybe no permission, maybe the role does not exist)");

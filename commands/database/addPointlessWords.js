@@ -1,4 +1,4 @@
-//TODO WIP
+//TODO: WIP
 
 var Command = require('../../Command.js');
 var words = require('./pointlesswords.json');

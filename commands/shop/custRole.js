@@ -1,4 +1,4 @@
-//TODO WIP
+//TODO: WIP
 
 const config = require('../../config.json'); // Import configuration
 const fs = require('fs'); // For log writing

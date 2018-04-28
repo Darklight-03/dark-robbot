@@ -31,7 +31,7 @@ class takeRole extends Command{
 			try {
 				if (msg.member.roles.has(role.id)) {
 					if (validroles.includes(role.name)) {
-						msg.member.removeRole(role);
+						msg.member.role.remove(role);
 						say.reply(msg,"STOLE ROLE " + role.toString() + " FROM " + msg.member.toString());
 					} else {
 						say.reply(msg,"I CANNOT TAKE THIS ROLE");

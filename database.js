@@ -90,7 +90,7 @@ exports.initializeTables = function () {
       }
     });
 };
-//TODO WIP
+//TODO: WIP
 exports.getCustRoleInfo = function ( ){
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM customrole;', (error, results, fields) => {
@@ -278,7 +278,7 @@ exports.getMuted = function (get, num) {
         }
       }
       if (typeof num !== 'undefined' && num < results.length) r = r[num];
-      // console.log('results: ',results,'\nr = ',r); //TODO parse results and then return.
+      // console.log('results: ',results,'\nr = ',r); //TODO: parse results and then return.
       resolve(r);
     });
   });

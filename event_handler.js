@@ -23,7 +23,7 @@ module.exports = { // Export event functions
 		fs.appendFileSync(`${config.logPath}${config.serverLog}`, `\n[${moment().format('DD/MM/YYYY HH:mm:ss')}][SERVERS] ${bot.user.username} has left the '${guild.name}' server!`);
 		// ...and log which server was left and when.
 	},
-	//TODO WIP
+	//TODO: WIP
 	"reaction": function reaction(reaction,user){
 		console.log("reactionhappened");
 		console.log(reaction.emoji.name);

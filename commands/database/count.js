@@ -58,4 +58,4 @@ class count extends Command{
 
 module.exports=count
 
-//TODO Make not count bot msgs or option to do so
+//TODO: Make not count bot msgs or option to do so
