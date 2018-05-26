@@ -29,7 +29,7 @@ class count extends Command{
 					//add the amount of occurrances in the message to the array
 					r = r + (b.length);
 					for(var i = 0;i<b.length;i++){
-						arr.push(bot.fetchUser(messagee.msg_author_id));
+						arr.push(bot.users.fetch(messagee.msg_author_id));
 					}
 				}
 			});
@@ -37,7 +37,7 @@ class count extends Command{
 			Promise.all(arr).then((arr2)=>{
 				arr2.forEach((el)=>{
 					var arr = [];
-					arr.push(msg.guild.fetchMember(el));
+					arr.push(msg.guild.members.fetch(el));
 				});
 				Promise.all(arr).then((values)=>{
 					console.log(values[0].username);
