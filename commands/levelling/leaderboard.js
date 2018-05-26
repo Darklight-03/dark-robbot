@@ -17,7 +17,7 @@ class leaderboard extends Command{
         database.leaderboard(msg.guild.id).then((leaderboard)=>{
             var s = '\n';
             leaderboard.forEach((item, place)=>{
-                msg.guild.fetchMember(item.user_id).then((member)=>{
+                msg.guild.members.fetch(item.user_id).then((member)=>{
                     var name = member.nickname;
                     if(!name){
                         name = member.user.username;
