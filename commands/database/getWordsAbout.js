@@ -11,7 +11,13 @@ class getWordsAbout extends Command{
         this.exec(bot,msg,super.args(args),super.params(args));
     }
     exec(bot,msg,args,params){
-        lists.getAllWords(false,msg.guild,this.filterContainsArg,undefined,basic.replacePunctuation).then((words)=>{
+        function filterContainsArg(m){
+            if(m.msg_content.toLowerCase().includes(args[0].toLowerCase())){
+                return true;
+            }
+            else return false;
+        }
+        lists.getAllWords(false,msg.guild,filterContainsArg,undefined,basic.replacePunctuation).then((words)=>{
             lists.sortedNumOcurrancesArr(words).then((ulist)=>{
                 ulist = ulist.slice(0,50);
                 var str = "";
@@ -25,12 +31,7 @@ class getWordsAbout extends Command{
         });
     }
 
-    filterContainsArg(m){
-        if(m.msg_content.toLowerCase().includes(args[0].toLowerCase())){
-            return true;
-        }
-        else return false;
-    }
+    
 }
 
 module.exports=getWordsAbout
